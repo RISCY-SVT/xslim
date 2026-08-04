@@ -1,3 +1,4 @@
+# Modified by RISCY-SVT in 2026: preserve ONNX ReduceMax empty-set semantics.
 import operator
 import os
 from functools import reduce
@@ -1784,11 +1785,48 @@ def ReduceMax_forward(
     op: Operation, values: List[torch.Tensor], ctx: TorchBackendContext = None, **kwargs
 ) -> torch.Tensor:
     input_value, dim, keepdim, noop = _get_reduce_inputs(op, values, min_input_opset=18)
-    if noop or input_value.numel() == 0:
+    if noop:
         return input_value
+    if input_value.numel() == 0:
+        return _reduce_max_empty_input(input_value, dim, keepdim)
     if dim is None:
         return _reshape_reduce_all_output(torch.max(input_value), input_value, keepdim)
     return torch.amax(input_value, dim=dim, keepdim=keepdim)
+
+
+def _reduce_max_empty_input(
+    input_value: torch.Tensor, dim, keepdim: bool
+) -> torch.Tensor:
+    """Return the ONNX identity value for an empty ReduceMax domain."""
+    rank = input_value.dim()
+    axes = tuple(range(rank)) if dim is None else tuple(
+        axis if axis >= 0 else axis + rank for axis in dim
+    )
+    reduced_axes = set(axes)
+    output_shape = []
+    for axis, size in enumerate(input_value.shape):
+        if axis in reduced_axes:
+            if keepdim:
+                output_shape.append(1)
+        else:
+            output_shape.append(size)
+
+    if any(size == 0 for size in output_shape):
+        return torch.empty(
+            output_shape, dtype=input_value.dtype, device=input_value.device
+        )
+    if input_value.dtype.is_floating_point:
+        identity = float("-inf")
+    elif input_value.dtype == torch.bool:
+        identity = False
+    else:
+        identity = torch.iinfo(input_value.dtype).min
+    return torch.full(
+        output_shape,
+        identity,
+        dtype=input_value.dtype,
+        device=input_value.device,
+    )
 
 
 def _normalize_reduce_axes(axes):
