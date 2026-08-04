@@ -1,0 +1,17 @@
+field	value
+host	Linux x86_64
+python	3.12.3
+pip	24.0
+build	1.5.0
+setuptools	83.0.0
+wheel	0.46.3
+numpy	2.5.1
+torch	2.10.0+cpu
+onnx	1.21.0
+onnxruntime	1.24.3
+onnxslim	0.1.87
+protobuf	6.33.5
+opencv_python	4.13.0.90
+pythonhashseed	0
+source_date_epoch	1785848558
+global_python_mutated	false

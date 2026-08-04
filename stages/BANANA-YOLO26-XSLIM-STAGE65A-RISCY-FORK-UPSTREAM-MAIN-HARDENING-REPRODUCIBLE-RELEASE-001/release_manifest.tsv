@@ -1,0 +1,14 @@
+field	value	status
+upstream_commit	9a33f2f770d00fd02ff8bc0f1907135e9bf47f8c	verified
+upstream_tree	05d2c8425ab8587abf401fa5976a08d008fdd719	verified
+release_commit	6765abc00e9d8dc93e468be0cbc7c188aefdccdb	verified
+release_tree	795b59ef4d3378d1f2470693cb6d23a40f3ba257	verified
+python_version	2.1.2+riscy.1	verified
+tag	v2.1.2-riscy.1	local-annotated-only
+tag_object	b2c2f9216e0527779bfcf7aa0c0960a3d8be81bd	verified-local
+tag_peeled_commit	6765abc00e9d8dc93e468be0cbc7c188aefdccdb	verified-local
+github_release	unavailable	blocked-repository-access
+pypi	unpublished	policy-pass
+spacemit_endorsement	false	declared
+ort_runtime_bundled	false	verified
+model_or_weights_bundled	false	verified

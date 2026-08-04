@@ -1,0 +1,11 @@
+item	value	status
+target	https://github.com/RISCY-SVT/xslim.git	requested
+github_owner_authentication	Custler	pass
+target_before_stage	absent	pass
+fork_parent	https://github.com/spacemit-com/xslim.git	not-created
+fork_attempt_1	HTTP 403 Resource not accessible by personal access token	blocked
+fork_attempt_2	HTTP 403 Resource not accessible by personal access token	blocked
+local_upstream_remote	https://github.com/spacemit-com/xslim.git	configured
+local_riscy_remote	git@github.com:RISCY-SVT/xslim.git	configured-unreachable
+development_branch	riscy/k1x-yolo26-hardening-001	local-only
+release_tag	v2.1.2-riscy.1	local-only

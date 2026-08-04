@@ -1,0 +1,6 @@
+ref	local	github_target	status
+upstream_main	9a33f2f770d00fd02ff8bc0f1907135e9bf47f8c	9a33f2f770d00fd02ff8bc0f1907135e9bf47f8c	pass
+riscy_fork	-	absent	blocked
+riscy/k1x-yolo26-hardening-001	local-evidence-head	absent	unpublished
+v2.1.2-riscy.1	b2c2f9216e0527779bfcf7aa0c0960a3d8be81bd	absent	unpublished
+github_release	local-payload-ready	absent	unpublished

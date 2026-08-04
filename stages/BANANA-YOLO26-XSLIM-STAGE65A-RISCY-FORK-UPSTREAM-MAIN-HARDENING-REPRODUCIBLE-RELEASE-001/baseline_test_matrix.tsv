@@ -1,0 +1,10 @@
+surface	protocol	result	status
+import	isolated upstream 9a33 environment	imported xslim 2.1.2	pass
+upstream_tests	pytest full suite	122 passed; 7 warnings; 65 subtests passed	pass
+source_build	python -m build	wheel and sdist created	pass
+wheel_install	fresh isolated environment	import and pip check	pass
+sdist_install	fresh isolated environment	import and pip check	pass
+reducemax_stage64_controls	3 tiny controls	3/3 created and host semantic checks passed	pass
+official_2_1_1_reducemax	accepted Stage64 exact evidence	3/3 bounded two-input/converted controls fail	historical-control
+direct_e2e_private_yolo	accepted 100-image holdout	100/100 score tensors collapsed	fail-retained
+six_output_split	accepted 2.1.1 versus 9a33 artifacts	deployable ONNX byte-identical and 10-image host check passed	pass

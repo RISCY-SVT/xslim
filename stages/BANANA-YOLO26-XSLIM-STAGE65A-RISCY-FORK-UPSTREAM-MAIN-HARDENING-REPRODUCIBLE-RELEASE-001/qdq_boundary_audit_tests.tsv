@@ -1,0 +1,5 @@
+case	granularity	condition	expected	result
+per_tensor_saturation	per-tensor	values below and above int8 real range	both rails and both out-of-range counts recorded	pass
+per_channel_axis	per-channel	axis=1 with distinct scales/zero-points	axis/granularity and rail hits recorded	pass
+fresh_wheel_cli_help	-	packaged entry point	exit 0	pass
+fresh_sdist_cli_help	-	packaged entry point	exit 0	pass

@@ -1,0 +1,15 @@
+surface	command_or_scope	result	status
+full_pytest	pytest -q	140 passed; 7 warnings; 65 subtests passed	pass
+reducemax_regressions	9 focused tests	9 passed	pass
+yolo_output_checker	4 semantic checker tests	4 passed	pass
+qdq_boundary_audit	2 synthetic saturation tests	2 passed	pass
+split_example	3 config/preprocess/probe tests	3 passed	pass
+ruff	ruff check .	all checks passed	pass
+compileall	python -m compileall -q src tests	clean	pass
+mypy_new_tools	mypy --follow-imports=skip --ignore-missing-imports src/xslim/tools	no issues in 4 source files	pass
+mypy_whole_project	unconfigured recursive import analysis	876 pre-existing PPQ/XSlim errors	not-a-configured-gate
+wheel_install	fresh offline venv	version; 3 CLI help smokes; pip check	pass
+sdist_install	fresh offline venv	version; 3 CLI help smokes; pip check	pass
+archive_safety	wheel/sdist/source	path; link; setid; secret; model exclusion	pass
+license_payload	wheel/sdist/source	license and notices present	pass
+git_diff_check	git diff --check	clean	pass

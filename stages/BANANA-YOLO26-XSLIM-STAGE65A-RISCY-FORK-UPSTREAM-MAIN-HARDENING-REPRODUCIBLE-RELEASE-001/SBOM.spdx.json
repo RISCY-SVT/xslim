@@ -1,0 +1,911 @@
+{
+  "SPDXID": "SPDXRef-DOCUMENT",
+  "creationInfo": {
+    "created": "2026-08-04T13:02:38Z",
+    "creators": [
+      "Tool: Stage65A-SPDX-generator/1"
+    ],
+    "licenseListVersion": "3.27.0"
+  },
+  "dataLicense": "CC0-1.0",
+  "documentDescribes": [
+    "SPDXRef-Package-xslim"
+  ],
+  "documentNamespace": "https://github.com/RISCY-SVT/xslim/releases/tag/v2.1.2-riscy.1/spdx/6765abc00e9d8dc93e468be0cbc7c188aefdccdb",
+  "files": [
+    {
+      "SPDXID": "SPDXRef-Artifact-1",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "e5c14c60ac6545a3b56f9921cf7fd8a4e191e36085b45b29b2e8a6906eab3116"
+        },
+        {
+          "algorithm": "SHA512",
+          "checksumValue": "357b78593d66650af7c27dbc29c119cc9364ddc026f61be8e9665a5bd8ed37d1147e177121ac25adf28bf16732885f168046f82c0c9bd38539bb90307a957f4b"
+        }
+      ],
+      "copyrightText": "NOASSERTION",
+      "fileName": "./xslim-2.1.2+riscy.1-py3-none-any.whl",
+      "fileTypes": [
+        "ARCHIVE"
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Artifact-2",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "6d57adcd41ae9a0360fea47c8d8611dd6983a8d0cb974b68f1bcce39bd9da501"
+        },
+        {
+          "algorithm": "SHA512",
+          "checksumValue": "53d2540613bc756d5004d8b2179861a55e8aea4d448eb23021cd06dc6744fd200f431b180e5602b499f657bcd3a0aae183a468bff6ce02ddc9f6c87bea40e620"
+        }
+      ],
+      "copyrightText": "NOASSERTION",
+      "fileName": "./xslim-2.1.2+riscy.1-source.tar.gz",
+      "fileTypes": [
+        "ARCHIVE"
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-Artifact-3",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "2913550e29f46816487109d2954465d67cbe6dd342587830ada94b866f8aaaa9"
+        },
+        {
+          "algorithm": "SHA512",
+          "checksumValue": "ed05bb1687b6fda53d48080b6b99b58e53096d02e3262b7dd7825cae558178363014c89eba64a0c404e1140eef70757eaf9da377e36a3cc08c488d8df4ff2fbd"
+        }
+      ],
+      "copyrightText": "NOASSERTION",
+      "fileName": "./xslim-2.1.2+riscy.1.tar.gz",
+      "fileTypes": [
+        "ARCHIVE"
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ]
+    }
+  ],
+  "name": "xslim-2.1.2+riscy.1-release",
+  "packages": [
+    {
+      "SPDXID": "SPDXRef-Package-colorama",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:pypi/colorama@0.4.6",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "BSD-3-Clause",
+      "name": "colorama",
+      "versionInfo": "0.4.6"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-filelock",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:pypi/filelock@3.32.2",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "Unlicense",
+      "name": "filelock",
+      "versionInfo": "3.32.2"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-flatbuffers",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:pypi/flatbuffers@25.12.19",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "Apache-2.0",
+      "name": "flatbuffers",
+      "versionInfo": "25.12.19"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-fsspec",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:pypi/fsspec@2026.7.0",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "BSD-3-Clause",
+      "name": "fsspec",
+      "versionInfo": "2026.7.0"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-jinja2",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:pypi/jinja2@3.1.6",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "BSD-3-Clause",
+      "name": "Jinja2",
+      "versionInfo": "3.1.6"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-loguru",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:pypi/loguru@0.7.3",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "MIT",
+      "name": "loguru",
+      "versionInfo": "0.7.3"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-markupsafe",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:pypi/markupsafe@3.0.3",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "BSD-3-Clause",
+      "name": "MarkupSafe",
+      "versionInfo": "3.0.3"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-ml-dtypes",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:pypi/ml-dtypes@0.5.4",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "Apache-2.0",
+      "name": "ml_dtypes",
+      "versionInfo": "0.5.4"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-mpmath",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:pypi/mpmath@1.3.0",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "BSD-3-Clause",
+      "name": "mpmath",
+      "versionInfo": "1.3.0"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-networkx",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:pypi/networkx@3.6.1",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "BSD-3-Clause",
+      "name": "networkx",
+      "versionInfo": "3.6.1"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-numpy",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:pypi/numpy@2.5.1",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "BSD-3-Clause AND 0BSD AND MIT AND Zlib AND CC0-1.0",
+      "name": "numpy",
+      "versionInfo": "2.5.1"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-onnx",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:pypi/onnx@1.21.0",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "Apache-2.0",
+      "name": "onnx",
+      "versionInfo": "1.21.0"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-onnx-graphsurgeon",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:pypi/onnx-graphsurgeon@0.6.1",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "Apache-2.0",
+      "name": "onnx_graphsurgeon",
+      "versionInfo": "0.6.1"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-onnxconverter-common",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:pypi/onnxconverter-common@1.16.0",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "MIT",
+      "name": "onnxconverter-common",
+      "versionInfo": "1.16.0"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-onnxruntime",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:pypi/onnxruntime@1.24.3",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "MIT",
+      "name": "onnxruntime",
+      "versionInfo": "1.24.3"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-onnxslim",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:pypi/onnxslim@0.1.87",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "MIT",
+      "name": "onnxslim",
+      "versionInfo": "0.1.87"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-opencv-python",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:pypi/opencv-python@4.13.0.90",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "Apache-2.0",
+      "name": "opencv-python",
+      "versionInfo": "4.13.0.90"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-packaging",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:pypi/packaging@26.2",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "Apache-2.0 OR BSD-2-Clause",
+      "name": "packaging",
+      "versionInfo": "26.2"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-pandas",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:pypi/pandas@3.0.0",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "BSD-3-Clause",
+      "name": "pandas",
+      "versionInfo": "3.0.0"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-pillow",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:pypi/pillow@12.3.0",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "HPND",
+      "name": "pillow",
+      "versionInfo": "12.3.0"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-protobuf",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:pypi/protobuf@6.33.5",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "BSD-3-Clause",
+      "name": "protobuf",
+      "versionInfo": "6.33.5"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-python-dateutil",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:pypi/python-dateutil@2.9.0.post0",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "Apache-2.0 OR BSD-3-Clause",
+      "name": "python-dateutil",
+      "versionInfo": "2.9.0.post0"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-setuptools",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:pypi/setuptools@83.0.0",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "setuptools",
+      "versionInfo": "83.0.0"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-six",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:pypi/six@1.17.0",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "MIT",
+      "name": "six",
+      "versionInfo": "1.17.0"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-sympy",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:pypi/sympy@1.14.0",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "BSD-3-Clause",
+      "name": "sympy",
+      "versionInfo": "1.14.0"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-tabulate",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:pypi/tabulate@0.9.0",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "MIT",
+      "name": "tabulate",
+      "versionInfo": "0.9.0"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-torch",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:pypi/torch@2.10.0%2Bcpu",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "BSD-3-Clause",
+      "name": "torch",
+      "versionInfo": "2.10.0+cpu"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-torchvision",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:pypi/torchvision@0.25.0%2Bcpu",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "BSD-3-Clause",
+      "name": "torchvision",
+      "versionInfo": "0.25.0+cpu"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-tqdm",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:pypi/tqdm@4.67.3",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "MPL-2.0 AND MIT",
+      "name": "tqdm",
+      "versionInfo": "4.67.3"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-typing-extensions",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:pypi/typing-extensions@4.16.0",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "PSF-2.0",
+      "name": "typing_extensions",
+      "versionInfo": "4.16.0"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-xslim",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:pypi/xslim@2.1.2%2Briscy.1",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "Apache-2.0",
+      "name": "xslim",
+      "versionInfo": "2.1.2+riscy.1"
+    }
+  ],
+  "relationships": [
+    {
+      "relatedSpdxElement": "SPDXRef-Package-xslim",
+      "relationshipType": "DESCRIBES",
+      "spdxElementId": "SPDXRef-DOCUMENT"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-markupsafe",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-jinja2"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-numpy",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-ml-dtypes"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-numpy",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-ml-dtypes"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-numpy",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-ml-dtypes"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-numpy",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-ml-dtypes"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-ml-dtypes",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-onnx"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-numpy",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-onnx"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-protobuf",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-onnx"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-typing-extensions",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-onnx"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-ml-dtypes",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-onnx-graphsurgeon"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-numpy",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-onnx-graphsurgeon"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-onnx",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-onnx-graphsurgeon"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-numpy",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-onnxconverter-common"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-onnx",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-onnxconverter-common"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-packaging",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-onnxconverter-common"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-protobuf",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-onnxconverter-common"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-flatbuffers",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-onnxruntime"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-numpy",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-onnxruntime"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-packaging",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-onnxruntime"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-protobuf",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-onnxruntime"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-sympy",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-onnxruntime"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-colorama",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-onnxslim"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-ml-dtypes",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-onnxslim"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-onnx",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-onnxslim"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-packaging",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-onnxslim"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-sympy",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-onnxslim"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-numpy",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-opencv-python"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-numpy",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-pandas"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-python-dateutil",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-pandas"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-six",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-python-dateutil"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-mpmath",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-sympy"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-filelock",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-torch"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-fsspec",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-torch"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-jinja2",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-torch"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-networkx",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-torch"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-setuptools",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-torch"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-sympy",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-torch"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-typing-extensions",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-torch"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-numpy",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-torchvision"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-pillow",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-torchvision"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-torch",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-torchvision"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-loguru",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-xslim"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-numpy",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-xslim"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-onnx",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-xslim"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-onnx-graphsurgeon",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-xslim"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-onnxconverter-common",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-xslim"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-onnxruntime",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-xslim"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-onnxslim",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-xslim"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-opencv-python",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-xslim"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-pandas",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-xslim"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-protobuf",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-xslim"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-tabulate",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-xslim"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-torch",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-xslim"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-torchvision",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-xslim"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-tqdm",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-xslim"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Artifact-1",
+      "relationshipType": "GENERATES",
+      "spdxElementId": "SPDXRef-Package-xslim"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Artifact-2",
+      "relationshipType": "GENERATES",
+      "spdxElementId": "SPDXRef-Package-xslim"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Artifact-3",
+      "relationshipType": "GENERATES",
+      "spdxElementId": "SPDXRef-Package-xslim"
+    }
+  ],
+  "spdxVersion": "SPDX-2.3"
+}

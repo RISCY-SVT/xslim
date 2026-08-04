@@ -1,0 +1,2 @@
+lane_a	lane_b	deployable_onnx_sha256	byte_identical	host_images	score_collapse_count	status
+XSLIM_2_1_1	UPSTREAM_9A33	ac855266d6ecaf092748692c10dd26548d0fa6c449d48bb7cc2b988257412d6c	true	10	0	pass

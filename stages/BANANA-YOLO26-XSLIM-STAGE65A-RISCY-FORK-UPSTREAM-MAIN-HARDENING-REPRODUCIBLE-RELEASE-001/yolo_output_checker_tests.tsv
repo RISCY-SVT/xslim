@@ -1,0 +1,7 @@
+case	fail_closed_enabled	expected_exit	expected_report	result
+noncollapsed_output	true	0	pass	pass
+all_zero_scores	false	0	fail-with-all-zero-scores	pass
+all_zero_scores	true	1	fail-with-all-zero-scores	pass
+nonfinite_output	false	0	fail-with-non-finite-output	pass
+fresh_wheel_cli_help	-	0	help	pass
+fresh_sdist_cli_help	-	0	help	pass

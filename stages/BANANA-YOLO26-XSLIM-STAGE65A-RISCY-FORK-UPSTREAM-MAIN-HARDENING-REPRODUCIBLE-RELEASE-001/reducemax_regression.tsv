@@ -1,0 +1,11 @@
+case	opset	axes_form	keepdims	noop_with_empty_axes	result
+attribute_axes_conversion	13_to_18	attribute_to_input	1	0	pass
+multiple_negative_axes	18	input	0	0	pass
+keepdims_zero	18	input	0	0	pass
+keepdims_one	18	input	1	0	pass
+empty_axes_reduce_all	18	empty_input	1	0	pass
+empty_axes_identity	18	empty_input	0	1	pass
+empty_float_reduced_domain	18	input	1	0	pass-negative-infinity-identity
+empty_int8_reduced_domain	18	input	0	0	pass-dtype-minimum-identity
+empty_unreduced_dimension	18	input	1	0	pass-empty-output-preserved
+conv_reducemax	18	input	1	0	pass-rtol-1e-6-atol-1e-6
