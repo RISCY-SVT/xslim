@@ -129,9 +129,11 @@ def _find_site(model: onnx.ModelProto, name: str) -> QdqSite:
         zero_point = np.asarray(0, dtype=np.uint8)
     axis_value = _attributes(node).get("axis")
     axis = int(axis_value) if axis_value is not None and scale.size > 1 else None
-    quantized_name = (
-        quantize.output[0] if quantize is not None else dequantize.input[0]
-    )
+    if quantize is not None:
+        quantized_name = quantize.output[0]
+    else:
+        assert dequantize is not None
+        quantized_name = dequantize.input[0]
     return QdqSite(
         requested_name=name,
         quantized_name=quantized_name,
@@ -226,8 +228,8 @@ def update_accumulator(
     zero_point = _broadcast(site.zero_point, quantized.shape, site.axis)
     lower = (limits.min - zero_point) * scale
     upper = (limits.max - zero_point) * scale
-    ref = reference.astype(np.float64, copy=False)
-    q = quantized.astype(np.float64, copy=False)
+    ref: np.ndarray = reference.astype(np.float64, copy=False)
+    q: np.ndarray = quantized.astype(np.float64, copy=False)
     dequantized = (q - zero_point) * scale
     difference = dequantized - ref
 
