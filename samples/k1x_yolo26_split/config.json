@@ -1,0 +1,37 @@
+{
+  "model_parameters": {
+    "onnx_model": "./yolo26n_e2e_fp32.onnx",
+    "working_dir": "./output",
+    "output_prefix": "yolo26n_k1x_split_s8_qdq"
+  },
+  "calibration_parameters": {
+    "calibration_step": 50,
+    "calibration_batch_size": 1,
+    "calibration_device": "cpu",
+    "calibration_type": "default",
+    "input_parameters": [
+      {
+        "input_name": "images",
+        "input_shape": [1, 3, 640, 640],
+        "mean_value": [0, 0, 0],
+        "std_value": [255, 255, 255],
+        "color_format": "rgb",
+        "preprocess_file": "./preprocess.py:preprocess_impl",
+        "data_list_path": "./independent_calibration_list.txt"
+      }
+    ]
+  },
+  "quantization_parameters": {
+    "precision_level": 1,
+    "finetune_level": 2,
+    "analysis_enable": true,
+    "truncate_var_names": [
+      "/model.23/one2one_cv2.0/one2one_cv2.0.2/Conv_output_0",
+      "/model.23/one2one_cv3.0/one2one_cv3.0.2/Conv_output_0",
+      "/model.23/one2one_cv2.1/one2one_cv2.1.2/Conv_output_0",
+      "/model.23/one2one_cv3.1/one2one_cv3.1.2/Conv_output_0",
+      "/model.23/one2one_cv2.2/one2one_cv2.2.2/Conv_output_0",
+      "/model.23/one2one_cv3.2/one2one_cv3.2.2/Conv_output_0"
+    ]
+  }
+}
