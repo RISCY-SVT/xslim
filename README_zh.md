@@ -1,8 +1,14 @@
+<!-- Modified by RISCY-SVT in 2026 to identify this derivative release. -->
+> **Unofficial RISCY-SVT build.** This derivative is based on XSlim commit
+> `9a33f2f770d00fd02ff8bc0f1907135e9bf47f8c` and is not endorsed by SpacemiT.
+> Provenance and changes are recorded in [UPSTREAM.md](UPSTREAM.md) and
+> [MODIFICATIONS.md](MODIFICATIONS.md).
+
 # XSlim
 
 中文 | [English](README.md)
 
-[![版本](https://img.shields.io/badge/版本-2.1.1-blue.svg)](https://github.com/spacemit-com/xslim/releases)
+[![版本](https://img.shields.io/badge/版本-2.1.2%2Briscy.1-blue.svg)](https://github.com/RISCY-SVT/xslim/releases)
 [![许可证](https://img.shields.io/badge/许可证-Apache%202.0-green.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/python-%3E%3D3.9-blue.svg)](https://www.python.org/)
 
@@ -28,19 +34,25 @@
 - **更完整的 ONNX 算子覆盖** — 支持在包含常见算术、激活、比较、规约、Dropout 以及 opset-24 `Pad` 形态的模型上运行 Graphwise Analysis 与量化
 - **自动 YOLO Decode 融合** — 将受支持的 YOLO 解码后处理子图融合为单个 `spacemit_functions.YoloDecode` 节点
 - **感知 ONNX Function 的导出链路** — 自动保留内嵌 `FunctionProto` 定义并补齐所需的自定义域导入
+- **可选输出语义检查** — 在不向核心量化流程加入特定模型规则的前提下检测分数塌缩
+- **Q/DQ 边界审计** — 报告可表示范围、饱和、偏差、MAE、余弦相似度、直方图和哈希
 - **基于 ONNX** — 构建在 ONNX 生态系统之上
 
 ## 安装
 
+RISCY-SVT 非官方版本不发布到 PyPI。请安装
+`v2.1.2-riscy.1` GitHub Release 中附带的 wheel：
+
 ```bash
-python -m pip install xslim
+python -m pip install ./xslim-2.1.2+riscy.1-py3-none-any.whl
 ```
 
 或从源码安装：
 
 ```bash
-git clone https://github.com/spacemit-com/xslim.git
+git clone https://github.com/RISCY-SVT/xslim.git
 cd xslim
+git switch riscy/k1x-yolo26-hardening-001
 python -m pip install .
 ```
 
@@ -125,6 +137,18 @@ xslim -i input.onnx -o output.onnx --fp16 --ignore_op_names /model/head/MatMul
 
 对于受支持的 YOLO 导出模型，无需额外开关：XSlim 会在模型精简阶段尝试把 decode 密集的后处理融合成 `spacemit_functions.YoloDecode`，并在导出模型时保留对应的 ONNX `FunctionProto`。
 
+Stage64 的 YOLO26 direct-E2E 诊断图未匹配该融合，量化后的分数通道发生塌缩。
+本分支不宣称该路径已修复。当前验证通过的路径是显式六输出切分：bbox 与
+confidence 分支保持分离，后处理保留浮点。参见
+[K1X/YOLO26 脱敏示例](samples/k1x_yolo26_split/README.md)。
+
+两个检查器均为显式启用的工具，不会无条件改变量化行为：
+
+```bash
+xslim-yolo-output-check --help
+xslim-qdq-boundary-audit --help
+```
+
 ## 文档
 
 - [配置参考](doc/configuration_zh.md) — 所有 JSON 配置选项的完整说明
@@ -132,6 +156,9 @@ xslim -i input.onnx -o output.onnx --fp16 --ignore_op_names /model/head/MatMul
 - [精度调优指南](doc/accuracy_tuning_zh.md) — 如何诊断并提升量化后的模型精度
 
 ## 示例
+
+- [K1X YOLO26 六输出切分](samples/k1x_yolo26_split/README.md) —— 脱敏配置、
+  精确 letterbox 预处理、语义检查和 Q/DQ 边界审计
 
 请查看 [samples](samples/) 目录，包含 ResNet-18、MobileNet V3、BERT 等模型的可运行示例。YOLO 专项用法请参考示例文档与精度调优指南。
 

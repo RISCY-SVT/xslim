@@ -1,7 +1,16 @@
+# Modified by RISCY-SVT in 2026: include fork provenance and notice files.
 include LICENSE
+include LICENSE_AUDIT.md
+include MODIFICATIONS.md
+include NOTICE-RISCY-SVT
 include README.md
 include README_zh.md
+include RELEASE_NOTES_v2.1.2-riscy.1.md
+include THIRD_PARTY_NOTICES.md
+include THIRD_PARTY_LICENSES.tsv
+include UPSTREAM.md
 include VERSION_NUMBER
 include requirements.txt
 graft doc
+graft samples
 graft samples

@@ -1,8 +1,14 @@
+# Modified by RISCY-SVT in 2026: validate derivative license and CLI metadata.
 import importlib.util
 import io
 from contextlib import redirect_stdout
 from pathlib import Path
 import unittest
+
+try:
+    import tomllib
+except ModuleNotFoundError:  # pragma: no cover - Python 3.9/3.10
+    from setuptools._vendor import tomli as tomllib
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -29,18 +35,40 @@ def _load_main_module():
 
 class TestPackagingStandards(unittest.TestCase):
     def test_pyproject_declares_standard_build_metadata(self):
-        pyproject_text = PYPROJECT_PATH.read_text(encoding="utf-8")
+        pyproject = tomllib.loads(PYPROJECT_PATH.read_text(encoding="utf-8"))
 
-        self.assertIn('[build-system]', pyproject_text)
-        self.assertIn(
-            'build-backend = "setuptools.build_meta"', pyproject_text
+        self.assertEqual(
+            pyproject["build-system"]["build-backend"], "setuptools.build_meta"
         )
-        self.assertIn('dynamic = ["version", "dependencies"]', pyproject_text)
-        self.assertIn('license-files = ["LICENSE"]', pyproject_text)
-        self.assertIn('[project.scripts]', pyproject_text)
-        self.assertIn('xslim = "xslim.__main__:main"', pyproject_text)
-        self.assertIn('package-dir = { "" = "src" }', pyproject_text)
-        self.assertIn('where = ["src"]', pyproject_text)
+        project = pyproject["project"]
+        self.assertEqual(project["dynamic"], ["version", "dependencies"])
+        self.assertEqual(project["license"], "Apache-2.0")
+        self.assertEqual(
+            set(project["license-files"]),
+            {
+                "LICENSE",
+                "LICENSE_AUDIT.md",
+                "MODIFICATIONS.md",
+                "NOTICE-RISCY-SVT",
+                "THIRD_PARTY_NOTICES.md",
+                "THIRD_PARTY_LICENSES.tsv",
+                "UPSTREAM.md",
+            },
+        )
+        self.assertEqual(project["scripts"]["xslim"], "xslim.__main__:main")
+        self.assertEqual(
+            project["scripts"]["xslim-yolo-output-check"],
+            "xslim.tools.yolo_output_check:main",
+        )
+        self.assertEqual(
+            project["scripts"]["xslim-qdq-boundary-audit"],
+            "xslim.tools.qdq_boundary_audit:main",
+        )
+        self.assertEqual(pyproject["tool"]["setuptools"]["package-dir"], {"": "src"})
+        self.assertEqual(
+            pyproject["tool"]["setuptools"]["packages"]["find"]["where"],
+            ["src"],
+        )
 
     def test_setup_py_is_legacy_compatibility_shim(self):
         setup_text = SETUP_PATH.read_text(encoding="utf-8")

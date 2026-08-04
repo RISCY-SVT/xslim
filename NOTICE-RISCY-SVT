@@ -1,0 +1,10 @@
+XSlim 2.1.2+riscy.1
+
+Unofficial RISCY-SVT build based on spacemit-com/xslim commit
+9a33f2f770d00fd02ff8bc0f1907135e9bf47f8c.
+
+This build is not endorsed by SpacemiT. The upstream-authored two-input
+ReduceMax repair remains attributed to upstream. RISCY-SVT additions are
+listed in MODIFICATIONS.md.
+
+This notice is informational and does not modify the Apache License 2.0.

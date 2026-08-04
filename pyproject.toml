@@ -1,3 +1,4 @@
+# Modified by RISCY-SVT in 2026: add unofficial fork metadata and opt-in audit CLIs.
 [build-system]
 requires = ["setuptools>=77", "wheel"]
 build-backend = "setuptools.build_meta"
@@ -8,7 +9,15 @@ description = "XSlim is an offline quantization toolkit based on PPQ for ONNX mo
 readme = { file = "README.md", content-type = "text/markdown" }
 requires-python = ">=3.9"
 license = "Apache-2.0"
-license-files = ["LICENSE"]
+license-files = [
+    "LICENSE",
+    "LICENSE_AUDIT.md",
+    "MODIFICATIONS.md",
+    "NOTICE-RISCY-SVT",
+    "THIRD_PARTY_NOTICES.md",
+    "THIRD_PARTY_LICENSES.tsv",
+    "UPSTREAM.md",
+]
 authors = [
     { name = "SpacemiT", email = "xslim@spacemit.com" },
 ]
@@ -28,13 +37,15 @@ classifiers = [
 dynamic = ["version", "dependencies"]
 
 [project.urls]
-Homepage = "https://github.com/spacemit-com/xslim"
-Repository = "https://github.com/spacemit-com/xslim"
-Documentation = "https://github.com/spacemit-com/xslim/tree/main/doc"
-Issues = "https://github.com/spacemit-com/xslim/issues"
+Homepage = "https://github.com/RISCY-SVT/xslim"
+Repository = "https://github.com/RISCY-SVT/xslim"
+Documentation = "https://github.com/RISCY-SVT/xslim/tree/main/doc"
+Issues = "https://github.com/RISCY-SVT/xslim/issues"
 
 [project.scripts]
 xslim = "xslim.__main__:main"
+xslim-yolo-output-check = "xslim.tools.yolo_output_check:main"
+xslim-qdq-boundary-audit = "xslim.tools.qdq_boundary_audit:main"
 
 [tool.setuptools]
 include-package-data = true
@@ -78,3 +89,6 @@ ignore = [
     "F841",
     "F901",
 ]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]

@@ -1,8 +1,13 @@
+<!-- Modified by RISCY-SVT in 2026 to identify this derivative release. -->
+> **Unofficial RISCY-SVT build.** This fork is based on XSlim 2.1.2 development commit
+> `9a33f2f770d00fd02ff8bc0f1907135e9bf47f8c` and is not endorsed by SpacemiT.
+> See [UPSTREAM.md](UPSTREAM.md) and [MODIFICATIONS.md](MODIFICATIONS.md).
+
 # XSlim
 
 [中文版](README_zh.md) | English
 
-[![Version](https://img.shields.io/badge/version-2.1.1-blue.svg)](https://github.com/spacemit-com/xslim/releases)
+[![Version](https://img.shields.io/badge/version-2.1.2%2Briscy.1-blue.svg)](https://github.com/RISCY-SVT/xslim/releases)
 [![License](https://img.shields.io/badge/license-Apache%202.0-green.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/python-%3E%3D3.9-blue.svg)](https://www.python.org/)
 
@@ -28,19 +33,25 @@
 - **Expanded ONNX operator coverage** – run Graphwise Analysis and quantization on models that use common arithmetic, activation, comparison, reduction, dropout, and opset-24 `Pad` patterns
 - **Automatic YOLO decode fusion** – fuse supported YOLO decode subgraphs into a single `spacemit_functions.YoloDecode` node
 - **ONNX Function-aware export** – preserve embedded FunctionProto definitions and emit required custom-domain imports automatically
+- **Opt-in output semantics** – detect detector score collapse without imposing a model-specific core rule
+- **Q/DQ boundary audit** – report representable ranges, saturation, bias, MAE, cosine, histograms, and hashes
 - **ONNX-based workflow** – built on the ONNX ecosystem
 
 ## Installation
 
+The unofficial RISCY-SVT build is not published on PyPI. Install the wheel
+attached to the `v2.1.2-riscy.1` GitHub release:
+
 ```bash
-python -m pip install xslim
+python -m pip install ./xslim-2.1.2+riscy.1-py3-none-any.whl
 ```
 
 Or install from source:
 
 ```bash
-git clone https://github.com/spacemit-com/xslim.git
+git clone https://github.com/RISCY-SVT/xslim.git
 cd xslim
+git switch riscy/k1x-yolo26-hardening-001
 python -m pip install .
 ```
 
@@ -125,6 +136,20 @@ Static INT8 quantization expects a floating-point input model. If the model alre
 
 For supported YOLO exports, no extra switch is required: XSlim will try to fuse decode-heavy post-processing into `spacemit_functions.YoloDecode` during simplification and keep the corresponding ONNX `FunctionProto` in the exported model.
 
+The Stage64 YOLO26 direct-E2E diagnostic does not match that fusion and its
+quantized score channels collapse. This fork does not claim that route is
+fixed. The validated workflow is the explicit six-output split, with bbox and
+confidence branches kept separate and post-processing left in floating point.
+See [the sanitized K1X/YOLO26 example](samples/k1x_yolo26_split/README.md).
+
+The optional validators are explicit tools, not unconditional quantization
+rules:
+
+```bash
+xslim-yolo-output-check --help
+xslim-qdq-boundary-audit --help
+```
+
 ## Documentation
 
 - [Configuration Reference](doc/configuration.md) – Full description of all JSON configuration options
@@ -132,6 +157,9 @@ For supported YOLO exports, no extra switch is required: XSlim will try to fuse 
 - [Accuracy Tuning Guide](doc/accuracy_tuning.md) – How to diagnose and improve quantization accuracy
 
 ## Samples
+
+- [K1X YOLO26 six-output split](samples/k1x_yolo26_split/README.md) – sanitized
+  configuration, exact letterbox preprocessing, semantic gate, and Q/DQ audit
 
 See the [samples](samples/) directory for ready-to-run examples covering ResNet-18, MobileNet V3, BERT, and more. YOLO-specific usage notes are documented in the examples and accuracy-tuning guides.
 

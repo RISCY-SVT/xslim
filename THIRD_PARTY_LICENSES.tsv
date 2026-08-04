@@ -1,0 +1,16 @@
+component	relationship	captured_version	license_expression_or_declaration	source	distributed_in_release
+OpenPPL PPQ	embedded source derivative	upstream XSlim snapshot	Apache-2.0	https://github.com/OpenPPL/ppq	yes
+NumPy	external dependency	2.5.1	BSD-3-Clause AND 0BSD AND MIT AND Zlib AND CC0-1.0	https://numpy.org	no
+protobuf	external dependency	6.33.5	BSD-3-Clause	https://github.com/protocolbuffers/protobuf	no
+PyTorch	external dependency	2.10.0+cpu	BSD-3-Clause	https://pytorch.org	no
+torchvision	external dependency	0.25.0+cpu	BSD-3-Clause	https://github.com/pytorch/vision	no
+tqdm	external dependency	4.67.3	MPL-2.0 AND MIT	https://github.com/tqdm/tqdm	no
+pandas	external dependency	3.0.0	BSD-3-Clause	https://pandas.pydata.org	no
+opencv-python	external dependency	4.13.0.90	Apache-2.0	https://github.com/opencv/opencv-python	no
+ONNX	external dependency	1.21.0	Apache-2.0	https://onnx.ai	no
+tabulate	external dependency	0.9.0	MIT	https://github.com/astanin/python-tabulate	no
+ONNX Runtime	external dependency	1.24.3	MIT	https://onnxruntime.ai	no
+ONNX GraphSurgeon	external dependency	0.5.8	Apache-2.0	https://github.com/NVIDIA/TensorRT/tree/main/tools/onnx-graphsurgeon	no
+onnxconverter-common	external dependency	1.16.0	MIT	https://github.com/microsoft/onnxconverter-common	no
+Loguru	external dependency	0.7.3	MIT	https://github.com/Delgan/loguru	no
+OnnxSlim	external dependency	0.1.87	MIT	https://github.com/inisis/OnnxSlim	no
