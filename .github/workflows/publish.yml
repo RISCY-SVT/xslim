@@ -1,3 +1,4 @@
+# Modified by RISCY-SVT in 2026: downstream forks must never publish this package to PyPI.
 # This workflow builds and publishes the Python package to PyPI when a GitHub release is published
 # For more information see: https://packaging.python.org/en/latest/guides/publishing-package-distribution-releases-using-github-actions-ci-cd-workflows/
 
@@ -9,6 +10,7 @@ on:
 
 jobs:
   build:
+    if: github.repository == 'spacemit-com/xslim'
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -53,6 +55,7 @@ jobs:
         path: dist/
 
   publish:
+    if: github.repository == 'spacemit-com/xslim'
     needs: build
     runs-on: ubuntu-latest
     environment: pypi
