@@ -51,5 +51,6 @@ No model, trained weight, calibration image, COCO image, SpacemiT ONNX Runtime,
 or other vendor binary is bundled. The release payload contains source, wheel,
 sdist, SBOM, checksums, reproducibility constraints, and manifests. The
 inherited upstream PyPI workflow is guarded so it can run only in
-`spacemit-com/xslim`; GitHub Actions is additionally disabled for this fork at
-release time.
+`spacemit-com/xslim`. Publication of this fork additionally requires GitHub
+Actions to be disabled and verified through the repository API before a
+release is created.

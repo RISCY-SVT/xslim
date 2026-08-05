@@ -165,7 +165,8 @@ See the [samples](samples/) directory for ready-to-run examples covering ResNet-
 
 ## Changelog
 
-For a full list of published versions, see the [Releases](https://github.com/spacemit-com/xslim/releases) page.
+For downstream builds, see the [RISCY-SVT releases](https://github.com/RISCY-SVT/xslim/releases) page.
+Vendor releases remain available from the [upstream project](https://github.com/spacemit-com/xslim/releases).
 
 ## Contributing
 

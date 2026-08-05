@@ -164,7 +164,8 @@ xslim-qdq-boundary-audit --help
 
 ## 更新日志
 
-完整的已发布版本记录请查阅 [Releases](https://github.com/spacemit-com/xslim/releases) 页面。
+下游构建请查阅 [RISCY-SVT Releases](https://github.com/RISCY-SVT/xslim/releases) 页面。
+供应商版本仍由[上游项目](https://github.com/spacemit-com/xslim/releases)发布。
 
 ## 参与贡献
 
