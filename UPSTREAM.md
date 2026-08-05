@@ -7,7 +7,7 @@ This repository is an unofficial derivative of XSlim.
 | Upstream project | `spacemit-com/xslim` |
 | Upstream URL | <https://github.com/spacemit-com/xslim> |
 | Reproducibility base | `9a33f2f770d00fd02ff8bc0f1907135e9bf47f8c` |
-| Base tree | `05d2c842fb4407bed80fb688c533e43079850dd1` |
+| Base tree | `05d2c8425ab8587abf401fa5976a08d008fdd719` |
 | Upstream version at base | `2.1.2` |
 | Published vendor release control | `2.1.1` at `c246694a1eba8d7689c43ba7b5f469bb0cb29c95` |
 | License | Apache License 2.0 |

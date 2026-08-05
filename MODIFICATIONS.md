@@ -8,11 +8,12 @@ additions; no ownership claim is made over upstream work.
 
 | File | Purpose |
 |---|---|
+| `.github/workflows/publish.yml` | Fail closed on downstream forks so a fork release cannot invoke the inherited PyPI publishing jobs. |
 | `MANIFEST.in` | Include derivative provenance and notice files in source distributions. |
 | `README.md` | Identify the unofficial derivative and link provenance. |
 | `README_zh.md` | Identify the unofficial derivative and link provenance. |
 | `VERSION_NUMBER` | Apply the PEP 440 local version `2.1.2+riscy.1`; the `riscy` suffix is the file's modification marker. |
-| `pyproject.toml` | Add fork URLs, opt-in audit CLIs, and source-layout pytest configuration. |
+| `pyproject.toml` | Add fork URLs, upstream attribution, downstream maintainer metadata, opt-in audit CLIs, and source-layout pytest configuration. |
 | `src/xslim/ppq_decorator/ppq/executor/op/torch/default.py` | Preserve ONNX `ReduceMax` identity behavior when a selected reduction domain is empty. |
 | `tests/test_packaging_standards.py` | Validate the derivative license payload and added console entry points structurally. |
 
@@ -25,13 +26,14 @@ Its `+riscy.1` suffix is the prominent modification identification.
 - Apache/provenance documents: `UPSTREAM.md`, `MODIFICATIONS.md`,
   `NOTICE-RISCY-SVT`, `LICENSE_AUDIT.md`, `THIRD_PARTY_NOTICES.md`, and
   `THIRD_PARTY_LICENSES.tsv`.
-- Unofficial release notes in `RELEASE_NOTES_v2.1.2-riscy.1.md`.
+- Unofficial release notes in `RELEASE_NOTES.md`.
 - Optional validation tools under `src/xslim/tools/`.
 - Regression tests for ReduceMax, detector output semantics, Q/DQ boundaries,
   packaging, and CLI behavior.
-- A sanitized K1X/YOLO26 six-output split example under
-  `samples/k1x_yolo26_split/`.
-- Stage 65A engineering evidence under `stages/`.
+- Two explicitly separated sanitized K1X/YOLO26 six-output split configs under
+  `samples/k1x_yolo26_split/`: the exact Stage64 reproduction policy and an
+  unvalidated vendor accuracy-tuning starting point.
+- Release provenance, workflow-safety, and sample-claim regression tests.
 
 ## Explicit non-changes
 
@@ -41,3 +43,4 @@ Its `+riscy.1` suffix is the prominent modification identification.
   private Stage64 artifact is distributed.
 - No unconditional model-specific rule was added to XSlim quantization.
 - No YoloDecode matcher change was selected for this release.
+- The tagged release source contains no Stage evidence or raw lab artifacts.

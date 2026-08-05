@@ -7,4 +7,8 @@ This build is not endorsed by SpacemiT. The upstream-authored two-input
 ReduceMax repair remains attributed to upstream. RISCY-SVT additions are
 listed in MODIFICATIONS.md.
 
+The six-output YOLO26 sample separates the Stage64-validated reproduction
+configuration from an unvalidated vendor accuracy-tuning starting point. The
+fork's inherited PyPI workflow is guarded against downstream execution.
+
 This notice is informational and does not modify the Apache License 2.0.

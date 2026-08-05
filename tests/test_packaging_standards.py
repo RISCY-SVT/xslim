@@ -56,6 +56,12 @@ class TestPackagingStandards(unittest.TestCase):
             },
         )
         self.assertEqual(project["scripts"]["xslim"], "xslim.__main__:main")
+        self.assertEqual(project["authors"][0]["name"], "SpacemiT")
+        self.assertEqual(project["maintainers"], [{"name": "RISCY-SVT"}])
+        self.assertEqual(
+            project["urls"]["Upstream"], "https://github.com/spacemit-com/xslim"
+        )
+        self.assertIn("v2.1.2-riscy.1", project["urls"]["Documentation"])
         self.assertEqual(
             project["scripts"]["xslim-yolo-output-check"],
             "xslim.tools.yolo_output_check:main",

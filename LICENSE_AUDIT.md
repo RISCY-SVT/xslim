@@ -32,6 +32,9 @@ The release gate verifies that wheel, sdist, and source archive contain:
 - `NOTICE-RISCY-SVT` and third-party inventories;
 - no trained weights, full models, private paths, credentials, or vendor ORT
   binaries.
+- no Stage evidence, lab logs, calibration lists, or dependency wheels in the
+  clean release source tree;
+- corrected upstream commit and tree identities in every distribution form.
 
 ## Attribution policy
 

@@ -21,6 +21,9 @@ license-files = [
 authors = [
     { name = "SpacemiT", email = "xslim@spacemit.com" },
 ]
+maintainers = [
+    { name = "RISCY-SVT" },
+]
 keywords = ["onnx", "quantization", "ptq", "fp16", "dynamic-quantization"]
 classifiers = [
     "Development Status :: 3 - Alpha",
@@ -39,8 +42,10 @@ dynamic = ["version", "dependencies"]
 [project.urls]
 Homepage = "https://github.com/RISCY-SVT/xslim"
 Repository = "https://github.com/RISCY-SVT/xslim"
-Documentation = "https://github.com/RISCY-SVT/xslim/tree/main/doc"
+Documentation = "https://github.com/RISCY-SVT/xslim/tree/v2.1.2-riscy.1/doc"
 Issues = "https://github.com/RISCY-SVT/xslim/issues"
+Upstream = "https://github.com/spacemit-com/xslim"
+"Release Notes" = "https://github.com/RISCY-SVT/xslim/releases/tag/v2.1.2-riscy.1"
 
 [project.scripts]
 xslim = "xslim.__main__:main"

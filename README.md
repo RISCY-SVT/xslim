@@ -51,7 +51,7 @@ Or install from source:
 ```bash
 git clone https://github.com/RISCY-SVT/xslim.git
 cd xslim
-git switch riscy/k1x-yolo26-hardening-001
+git switch riscy/k1x-yolo26-hardening-release-001
 python -m pip install .
 ```
 
@@ -169,7 +169,8 @@ For a full list of published versions, see the [Releases](https://github.com/spa
 
 ## Contributing
 
-Contributions are welcome! Please open an [issue](https://github.com/spacemit-com/xslim/issues) or submit a [pull request](https://github.com/spacemit-com/xslim/pulls).
+Downstream release issues belong in the [RISCY-SVT issue tracker](https://github.com/RISCY-SVT/xslim/issues).
+Upstream contributions should follow the [SpacemiT project](https://github.com/spacemit-com/xslim).
 
 ## License
 

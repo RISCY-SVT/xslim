@@ -52,7 +52,7 @@ python -m pip install ./xslim-2.1.2+riscy.1-py3-none-any.whl
 ```bash
 git clone https://github.com/RISCY-SVT/xslim.git
 cd xslim
-git switch riscy/k1x-yolo26-hardening-001
+git switch riscy/k1x-yolo26-hardening-release-001
 python -m pip install .
 ```
 
@@ -168,7 +168,8 @@ xslim-qdq-boundary-audit --help
 
 ## 参与贡献
 
-欢迎贡献！请提交 [Issue](https://github.com/spacemit-com/xslim/issues) 或发起 [Pull Request](https://github.com/spacemit-com/xslim/pulls)。
+下游版本问题请提交到 [RISCY-SVT Issue 跟踪器](https://github.com/RISCY-SVT/xslim/issues)。
+上游贡献请遵循 [SpacemiT 项目](https://github.com/spacemit-com/xslim) 的流程。
 
 ## 许可证
 
