@@ -23,15 +23,54 @@ def _module(name: str, path: Path):
 
 
 class TestK1xYolo26SplitExample(unittest.TestCase):
-    def test_config_preserves_six_separate_vendor_boundaries(self):
-        config = json.loads((SAMPLE / "config.json").read_text())
+    def _config(self, name: str) -> dict:
+        return json.loads((SAMPLE / name).read_text())
+
+    def test_configs_preserve_six_identical_separate_vendor_boundaries(self):
+        repro = self._config("config_stage64_repro.json")
+        accuracy = self._config("config_accuracy_starting_point.json")
+        repro_boundaries = repro["quantization_parameters"]["truncate_var_names"]
+        accuracy_boundaries = accuracy["quantization_parameters"]["truncate_var_names"]
+        self.assertEqual(len(repro_boundaries), 6)
+        self.assertEqual(len(set(repro_boundaries)), 6)
+        self.assertEqual(repro_boundaries, accuracy_boundaries)
+
+    def test_stage64_reproduction_policy_is_exact(self):
+        config = self._config("config_stage64_repro.json")
+        calibration = config["calibration_parameters"]
+        input_parameter = calibration["input_parameters"][0]
         quantization = config["quantization_parameters"]
-        boundaries = quantization["truncate_var_names"]
-        self.assertEqual(len(boundaries), 6)
-        self.assertEqual(len(set(boundaries)), 6)
+        self.assertEqual(calibration["calibration_step"], 50)
+        self.assertEqual(input_parameter["std_value"], [1, 1, 1])
+        self.assertEqual(
+            input_parameter["preprocess_file"], "./preprocess.py:preprocess_impl"
+        )
+        self.assertEqual(quantization["precision_level"], 0)
+        self.assertEqual(quantization["finetune_level"], 1)
+        self.assertTrue(quantization["analysis_enable"])
+
+    def test_accuracy_starting_point_is_distinct_and_unvalidated(self):
+        config = self._config("config_accuracy_starting_point.json")
+        calibration = config["calibration_parameters"]
+        input_parameter = calibration["input_parameters"][0]
+        quantization = config["quantization_parameters"]
+        self.assertEqual(calibration["calibration_step"], 500)
+        self.assertIn("500plus", input_parameter["data_list_path"])
+        self.assertEqual(input_parameter["std_value"], [1, 1, 1])
         self.assertEqual(quantization["precision_level"], 1)
         self.assertEqual(quantization["finetune_level"], 2)
-        self.assertTrue(quantization["analysis_enable"])
+        readme = (SAMPLE / "README.md").read_text()
+        self.assertIn("has not passed K1X board or COCO validation", readme)
+
+    def test_configs_are_public_safe_placeholders(self):
+        self.assertFalse((SAMPLE / "config.json").exists())
+        for name in (
+            "config_stage64_repro.json",
+            "config_accuracy_starting_point.json",
+        ):
+            text = (SAMPLE / name).read_text()
+            self.assertNotIn("/data/", text)
+            self.assertNotIn(".onnxruntime", text)
 
     def test_preprocess_is_nchw_rgb_float_letterbox(self):
         preprocess = _module("riscy_sample_preprocess", SAMPLE / "preprocess.py")

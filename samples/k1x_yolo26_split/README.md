@@ -1,16 +1,29 @@
 # K1X YOLO26 six-output split example
 
-This sanitized example records the Stage64-proven graph policy without
-including a model, weights, images, or private paths. Confirm that the six
-tensor names exist in your own floating-point export before using the config.
+This sanitized example contains two deliberately separate policies without a
+model, weights, images, or private paths. Confirm that the six tensor names
+exist in your own floating-point export before using either config.
 
 Use an independent calibration set. Do not calibrate on the evaluation or
 holdout images used to decide accuracy. Populate
-`independent_calibration_list.txt` locally; it is intentionally absent from
-this repository.
+the referenced calibration list locally; it is intentionally absent from this
+repository.
+
+`config_stage64_repro.json` reproduces the policy that Stage64 validated on
+host and K1X: 50 calibration images, `precision_level=0`, and
+`finetune_level=1` with project-exact preprocessing.
 
 ```bash
-xslim -c config.json
+xslim -c config_stage64_repro.json
+```
+
+`config_accuracy_starting_point.json` follows current vendor accuracy-tuning
+guidance: an independent corpus of at least 500 images,
+`precision_level=1`, and `finetune_level=2`. It is a starting point for a new
+accuracy study. It has not passed K1X board or COCO validation in this release.
+
+```bash
+xslim -c config_accuracy_starting_point.json
 ```
 
 The six bbox and confidence boundaries remain separate. XSlim quantizes the
@@ -45,5 +58,6 @@ xslim-qdq-boundary-audit \
   --report qdq-boundaries.tsv
 ```
 
-These tools are opt-in diagnostics. They do not make a deployment or accuracy
-claim, and the detector contract must be supplied explicitly.
+These tools are opt-in diagnostics. Neither config includes a model, weights,
+images, or private paths. They do not make a deployment or accuracy claim, and
+the detector contract must be supplied explicitly.

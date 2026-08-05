@@ -25,7 +25,7 @@ def _letterbox(path: str) -> np.ndarray:
     vertical = 640 - resized_height
     left = int(round(horizontal / 2.0 - 0.1))
     top = int(round(vertical / 2.0 - 0.1))
-    canvas = np.full((640, 640, 3), 114, dtype=np.uint8)
+    canvas: np.ndarray = np.full((640, 640, 3), 114, dtype=np.uint8)
     canvas[top : top + resized_height, left : left + resized_width] = resized
     rgb = cv2.cvtColor(canvas, cv2.COLOR_BGR2RGB)
     return np.transpose(rgb.astype(np.float32) / 255.0, (2, 0, 1))
