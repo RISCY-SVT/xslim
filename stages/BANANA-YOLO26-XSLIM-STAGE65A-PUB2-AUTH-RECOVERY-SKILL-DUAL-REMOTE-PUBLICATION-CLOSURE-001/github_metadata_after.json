@@ -1,0 +1,5 @@
+{
+  "mutation_attempted": false,
+  "reason": "mandatory Actions permissions GET returned HTTP 403",
+  "state": "unchanged_from_github_metadata_before.json"
+}

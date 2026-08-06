@@ -1,0 +1,9 @@
+field	value	status
+login	Custler	pass
+user_id	30170782	pass
+repository	RISCY-SVT/xslim	pass
+fork	true	pass
+parent	spacemit-com/xslim	pass
+default_branch	main	pass
+repository_admin_visible	true	pass
+actions_permissions_get	403	fail

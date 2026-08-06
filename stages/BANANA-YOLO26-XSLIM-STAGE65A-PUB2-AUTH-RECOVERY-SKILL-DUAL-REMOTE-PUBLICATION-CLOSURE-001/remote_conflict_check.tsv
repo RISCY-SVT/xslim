@@ -1,0 +1,7 @@
+surface	observed	status
+github_main	9a33f2f770d00fd02ff8bc0f1907135e9bf47f8c	pass
+github_riscy_branches	absent	pass
+github_release_tag	absent	pass
+gitlab_refs	none	pass
+gitlab_release_tag	absent	pass
+actions_administration_get	HTTP_403	publication_blocker

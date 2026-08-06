@@ -1,0 +1,5 @@
+field	value	status
+release_created	false	not_attempted
+workflow_run_count	0	observed
+actions_enabled_state	unknown	GET_HTTP_403
+postrelease_check	not_applicable	no_release

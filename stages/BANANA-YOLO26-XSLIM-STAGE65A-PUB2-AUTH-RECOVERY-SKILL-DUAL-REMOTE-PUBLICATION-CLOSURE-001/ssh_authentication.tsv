@@ -1,0 +1,3 @@
+host	account	exit_code	classification
+github.com	Custler	1	authenticated_shell_disabled
+gitlab.itglobal.com	sergey.tyurin	0	authenticated

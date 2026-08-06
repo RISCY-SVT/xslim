@@ -1,0 +1,3 @@
+host	expected_identity	resolved_identity	status
+github.com	~/.ssh/Custmine.txt	~/.ssh/Custmine.txt	pass
+gitlab.itglobal.com	~/.ssh/git-rnode	~/.ssh/git-rnode	pass

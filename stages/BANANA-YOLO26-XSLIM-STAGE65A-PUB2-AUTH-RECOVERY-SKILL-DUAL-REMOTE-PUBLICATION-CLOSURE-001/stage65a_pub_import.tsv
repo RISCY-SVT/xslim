@@ -1,0 +1,9 @@
+field	value	status
+classification	stage65a-pub-blocked-github-actions-publication-safety	imported
+packet_tree_sha256	7e88c1f882a5af036572be874e2be21239befd5494968805477e9b3ce6886263	independently_verified
+packet_file_count	69	verified
+packet_byte_count	1163486	verified
+packet_symlink_count	0	verified
+source_repair_status	complete	accepted
+tests	147_passed_6_warnings_65_subtests	accepted
+package_reproducibility	pass	accepted

@@ -1,0 +1,19 @@
+MODE_ENV
+HTTP/2.0 403 Forbidden
+X-Accepted-GitHub-Permissions: administration=read
+X-RateLimit-Limit: 5000
+X-RateLimit-Remaining: 4989
+X-RateLimit-Resource: core
+X-RateLimit-Used: 11
+Error: Resource not accessible by personal access token
+
+MODE_STORED
+HTTP/2.0 403 Forbidden
+X-Accepted-GitHub-Permissions: administration=read
+X-RateLimit-Limit: 5000
+X-RateLimit-Remaining: 4988
+X-RateLimit-Resource: core
+X-RateLimit-Used: 12
+Error: Resource not accessible by personal access token
+
+No Authorization header or credential value was captured.

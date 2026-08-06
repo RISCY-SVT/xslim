@@ -1,0 +1,11 @@
+field	value	status
+repository	RISCY-SVT/xslim	pass
+true_fork	true	pass
+parent	spacemit-com/xslim	pass
+main	9a33f2f770d00fd02ff8bc0f1907135e9bf47f8c	pass
+riscy_historical_branch	absent	pass
+riscy_clean_release_branch	absent	pass
+riscy_pub2_evidence_branch	absent	pass
+release_tag	absent	pass
+release_count	0	pass
+workflow_run_count	0	observed_not_actions_readback

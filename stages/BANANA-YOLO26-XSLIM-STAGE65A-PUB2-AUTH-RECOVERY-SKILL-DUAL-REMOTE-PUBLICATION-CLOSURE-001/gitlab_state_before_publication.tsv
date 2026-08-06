@@ -1,0 +1,8 @@
+field	value	status
+project	riscy/sw/xslim	pass
+project_id	2158	pass
+visibility	private	pass
+empty_repo	true	pass
+remote_ref_count	0	pass
+release_count	0	pass
+default_branch_metadata	main	configured_but_uninitialized

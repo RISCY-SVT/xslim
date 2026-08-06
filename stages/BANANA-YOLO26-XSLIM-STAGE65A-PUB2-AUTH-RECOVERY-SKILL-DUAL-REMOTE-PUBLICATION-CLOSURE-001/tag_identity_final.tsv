@@ -1,0 +1,7 @@
+field	value	status
+tag	v2.1.2-riscy.1	local_only
+current_local_tag_object	b2c2f9216e0527779bfcf7aa0c0960a3d8be81bd	old_unpublished_retained
+current_local_peeled_commit	6765abc00e9d8dc93e468be0cbc7c188aefdccdb	must_not_publish
+required_new_peeled_commit	12647b4a79fe5ec9a3973515a17cece4cb83daf4	not_created_due_actions_block
+github_tag	absent	pass
+gitlab_tag	absent	pass

@@ -1,0 +1,2 @@
+No push attempted.
+Reason: neither GitHub API credential mode passed the mandatory Actions permissions GET.

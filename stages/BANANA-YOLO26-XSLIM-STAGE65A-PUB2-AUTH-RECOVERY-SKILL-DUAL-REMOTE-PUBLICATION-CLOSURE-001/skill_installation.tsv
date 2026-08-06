@@ -1,0 +1,9 @@
+field	value	status
+skill_path	/data/.codex/skills/k1x_dual_remote_auth	installed
+skill_frontmatter_name	k1x_dual_remote_auth	local_k1x_naming_contract
+script_path	/data/.codex/skills/k1x_dual_remote_auth/scripts/preflight.sh	installed
+scripts_directory_mode	700	pass
+script_mode	700	pass
+bash_syntax	pass	pass
+selftest_classification	github-actions-administration-permission-missing	expected_environment_result
+codex_restart_required	true	pending_human

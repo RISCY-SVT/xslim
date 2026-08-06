@@ -1,0 +1,6 @@
+ref	local	github	gitlab	status
+main	9a33f2f770d00fd02ff8bc0f1907135e9bf47f8c	9a33f2f770d00fd02ff8bc0f1907135e9bf47f8c	absent	blocked_not_initialized
+riscy/k1x-yolo26-hardening-001	1c4168daf354f1e3afd56105c1b9ff44a25dd91e	absent	absent	not_pushed
+riscy/k1x-yolo26-hardening-release-001	12647b4a79fe5ec9a3973515a17cece4cb83daf4	absent	absent	not_pushed
+riscy/k1x-yolo26-stage65a-pub2-evidence-001	local_evidence_commit	absent	absent	not_pushed
+v2.1.2-riscy.1	old_local_tag_only	absent	absent	not_recreated_or_pushed

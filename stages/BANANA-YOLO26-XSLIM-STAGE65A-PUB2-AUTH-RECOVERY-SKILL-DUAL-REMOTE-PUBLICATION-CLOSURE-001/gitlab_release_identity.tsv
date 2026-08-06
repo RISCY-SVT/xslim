@@ -1,0 +1,3 @@
+field	value	status
+release	v2.1.2-riscy.1	not_created
+reason	publication_stopped_before_gitlab_mutation	not_published

@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "stage_id": "BANANA-YOLO26-XSLIM-STAGE65A-PUB2-AUTH-RECOVERY-SKILL-DUAL-REMOTE-PUBLICATION-CLOSURE-001",
+  "classification": "stage65a-pub2-blocked-github-actions-administration-permission-missing-exact-credential-evidence-complete",
+  "publication_classification": "not-published-actions-safety-gate",
+  "clean_release_head": "12647b4a79fe5ec9a3973515a17cece4cb83daf4",
+  "clean_release_tree": "9ebb21ae2277cf760ed436692c7bc6343ca88d31",
+  "github_actions_permissions_http": 403,
+  "github_actions_disable_attempted": false,
+  "gitlab_mutation_attempted": false,
+  "tag_recreated": false,
+  "refs_pushed": false,
+  "github_release_created": false,
+  "gitlab_release_created": false,
+  "pypi_published": false,
+  "protected_projects_unchanged": true,
+  "evidence_branch_head": "recorded externally after this evidence commit"
+}

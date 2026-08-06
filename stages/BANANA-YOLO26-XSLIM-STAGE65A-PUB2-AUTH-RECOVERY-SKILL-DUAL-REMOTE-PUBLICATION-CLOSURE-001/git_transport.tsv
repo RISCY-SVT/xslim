@@ -1,0 +1,4 @@
+remote	repository	ls_remote_status	result
+github	RISCY-SVT/xslim	0	pass
+gitlab	riscy/sw/xslim	0	pass_empty_repository
+upstream	spacemit-com/xslim	not_retested	read_only_no_push_configured

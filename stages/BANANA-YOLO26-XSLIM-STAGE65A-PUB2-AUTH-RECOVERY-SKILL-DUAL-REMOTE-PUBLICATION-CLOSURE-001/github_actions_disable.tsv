@@ -1,0 +1,4 @@
+operation	expected	observed	status
+GET_before	HTTP_200	HTTP_403	fail
+PUT_disable	HTTP_204	not_attempted	blocked_by_GET
+GET_readback	enabled_false	not_attempted	blocked_by_GET
