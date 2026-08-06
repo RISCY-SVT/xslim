@@ -1,0 +1,4 @@
+archive	path_safety	link_device_safety	status
+wheel	pass	pass	pass
+sdist	pass	pass	pass
+source_archive	pass	pass	pass

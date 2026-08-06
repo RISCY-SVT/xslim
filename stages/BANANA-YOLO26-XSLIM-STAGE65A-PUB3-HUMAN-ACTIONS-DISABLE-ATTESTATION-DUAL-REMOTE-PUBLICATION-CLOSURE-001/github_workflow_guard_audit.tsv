@@ -1,0 +1,2 @@
+workflow	sha256	release_triggered_jobs	guarded_jobs	guard	status
+.github/workflows/publish.yml	8c8ec79bd355a0491646057f324f025b09df8392ea75a3f08a9119adc45976d4	2	2	github.repository == 'spacemit-com/xslim'	pass

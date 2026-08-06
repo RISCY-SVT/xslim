@@ -1,0 +1,3 @@
+remote	main	accepted_branches_before	tag_before	releases_before	status
+github	9a33f2f770d00fd02ff8bc0f1907135e9bf47f8c	absent	absent	0	pass
+gitlab	empty	absent	absent	0	pass

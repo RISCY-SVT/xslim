@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "stage_id": "BANANA-YOLO26-XSLIM-STAGE65A-PUB3-HUMAN-ACTIONS-DISABLE-ATTESTATION-DUAL-REMOTE-PUBLICATION-CLOSURE-001",
+  "classification": "stage65a-pub3-refs-published-github-release-workflows-permission-missing",
+  "publication_classification": "refs-parity-complete-release-objects-not-created",
+  "actions_safety": {
+    "mode": "human-web-ui-attested",
+    "api_readback": "unavailable-http-403",
+    "screenshot_sha256": "2356a88d394168af02afa7b02b49b4c875523ac7a75ec0b6cf47fdeb9bf62df2",
+    "workflow_inventory": 0,
+    "workflow_runs": 0,
+    "source_guard": "pass"
+  },
+  "refs": {
+    "main": "9a33f2f770d00fd02ff8bc0f1907135e9bf47f8c",
+    "historical": "1c4168daf354f1e3afd56105c1b9ff44a25dd91e",
+    "clean_release": "12647b4a79fe5ec9a3973515a17cece4cb83daf4",
+    "pub2_evidence": "c1d9052ea55f10075033e03b5b0e53e99ecd60fe",
+    "tag_object": "604507c45c8eb2ff5c548d30d981203fedc61ea3",
+    "tag_peeled": "12647b4a79fe5ec9a3973515a17cece4cb83daf4",
+    "github_gitlab_parity": true
+  },
+  "release": {
+    "github": {
+      "created": false,
+      "reason": "workflows-write-permission-missing"
+    },
+    "gitlab": {
+      "created": false,
+      "reason": "avoided-asymmetric-release-surface"
+    },
+    "asset_parity": "not-applicable-no-release-assets"
+  },
+  "pypi": {
+    "version": "2.1.2+riscy.1",
+    "published": false,
+    "http_status": 404
+  },
+  "protected_projects_unchanged": true,
+  "stage65b_authorized": false,
+  "timestamp": "2026-08-06T09:31:51Z"
+}

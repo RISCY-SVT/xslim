@@ -1,0 +1,11 @@
+field	value	status
+classification	stage65a-pub2-blocked-github-actions-administration-permission-missing-exact-credential-evidence-complete	accepted
+result_packet_tree_sha256	e7ec3328d1aa235a194fe6dfa5700c28f7e8bdc6cb1d807c2721e6f685404c6b	pass
+file_count	49	pass
+byte_count	21443	pass
+symlink_count	0	pass
+github_actions_env_http	403	preserved
+github_actions_stored_http	403	preserved
+github_workflow_count	0	accepted
+github_workflow_run_count	0	accepted
+pypi_version_status	404	accepted

@@ -1,0 +1,6 @@
+field	value	status
+tag	v2.1.2-riscy.1	verified
+release_count	0	verified
+generic_package_upload	not-attempted	avoided-asymmetric-surface
+release_create	not-attempted	blocked-by-github-draft-gate
+asset_count	0	not-created

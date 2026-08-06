@@ -1,0 +1,4 @@
+surface	asset_count	parity_status	reason
+local_payload	10	prepared	neutral payload complete
+github	0	not-tested	draft release creation blocked
+gitlab	0	not-tested	release intentionally not created after GitHub blocker

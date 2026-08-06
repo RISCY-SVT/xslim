@@ -1,0 +1,7 @@
+field	value
+tag_name	v2.1.2-riscy.1
+tag_object	604507c45c8eb2ff5c548d30d981203fedc61ea3
+peeled_commit	12647b4a79fe5ec9a3973515a17cece4cb83daf4
+release_tree	9ebb21ae2277cf760ed436692c7bc6343ca88d31
+annotation	XSlim 2.1.2+riscy.1 - unofficial RISCY-SVT hardening release
+signing_status	unsigned-annotated

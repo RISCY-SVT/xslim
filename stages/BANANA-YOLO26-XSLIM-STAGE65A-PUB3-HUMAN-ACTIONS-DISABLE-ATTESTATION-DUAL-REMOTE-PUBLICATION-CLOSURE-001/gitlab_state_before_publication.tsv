@@ -1,0 +1,6 @@
+field	value	status
+project_id	2158	pass
+default_branch	main	configured
+empty_repo	true	pass-before-main-init
+conflicting_refs	0	pass
+release_count	0	pass

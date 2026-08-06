@@ -1,0 +1,11 @@
+gate	value	status
+actions_safety_mode	human-web-ui-attested	accepted-this-stage-only
+actions_api_env_http	403	preserved
+actions_api_stored_http	403	preserved
+screenshot_sha256	2356a88d394168af02afa7b02b49b4c875523ac7a75ec0b6cf47fdeb9bf62df2	attested
+workflow_inventory	0	pass
+workflow_runs_before	0	pass
+default_branch	main	pass
+github_main	9a33f2f770d00fd02ff8bc0f1907135e9bf47f8c	pass
+upstream_only_guard_count	2	pass
+manual_override	accepted-for-this-stage-only	pass

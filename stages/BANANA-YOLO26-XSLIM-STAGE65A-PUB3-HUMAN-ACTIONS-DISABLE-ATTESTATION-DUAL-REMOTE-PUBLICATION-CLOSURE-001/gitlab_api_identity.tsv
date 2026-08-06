@@ -1,0 +1,8 @@
+field	value	status
+host	gitlab.itglobal.com	pass
+username	sergey.tyurin	pass
+project_id	2158	pass
+project_path	riscy/sw/xslim	pass
+access_level	40	pass
+visibility	private	observed
+credential_mode	stored	pass

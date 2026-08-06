@@ -1,0 +1,8 @@
+field	value	status
+tag	v2.1.2-riscy.1	verified
+draft_create	HTTP 403	blocked
+accepted_permissions	contents=write OR contents=write,workflows=write	observed
+classification	github-release-workflows-permission-missing	blocked
+release_count_after_attempt	0	verified
+asset_count	0	not-created
+publish_result	not-attempted	blocked-before-draft
