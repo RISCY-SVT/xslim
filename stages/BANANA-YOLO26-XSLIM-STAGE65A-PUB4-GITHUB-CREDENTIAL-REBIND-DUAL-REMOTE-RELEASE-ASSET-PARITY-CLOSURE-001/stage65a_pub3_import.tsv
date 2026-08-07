@@ -1,0 +1,9 @@
+field	value	status
+stage_id	BANANA-YOLO26-XSLIM-STAGE65A-PUB3-HUMAN-ACTIONS-DISABLE-ATTESTATION-DUAL-REMOTE-PUBLICATION-CLOSURE-001	imported-read-only
+classification	stage65a-pub3-refs-published-github-release-workflows-permission-missing	accepted
+packet_tree_sha256	60d01ca06a3333a57e4fded2cc10ea3bc7698f9cf54dc83a57fa8935f41c5534	pass
+packet_file_count	46	pass
+clean_release_head	12647b4a79fe5ec9a3973515a17cece4cb83daf4	pass
+pub3_evidence_head	dcef989d3217a89fb3d37b1bcb4d67ec2d483697	pass
+tag_object	604507c45c8eb2ff5c548d30d981203fedc61ea3	pass
+payload_tree_sha256	99b90ede34df19e8ebc54353c94712b3f888f135065f97c1a638b2941c95a893	pass

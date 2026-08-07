@@ -1,0 +1,6 @@
+{
+  "enabled": false,
+  "sha_pinning_required": false,
+  "http_status": 200,
+  "selected_credential_mode": "stored"
+}

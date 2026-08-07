@@ -1,0 +1,11 @@
+field	value	status
+project	riscy/sw/xslim	pass
+project_id	2158	pass
+tag_name	v2.1.2-riscy.1	pass
+commit	12647b4a79fe5ec9a3973515a17cece4cb83daf4	pass
+release_url	https://gitlab.itglobal.com/riscy/sw/xslim/-/releases/v2.1.2-riscy.1	pass
+created_at	2026-08-07T15:40:48.233Z	pass
+asset_link_count	10	pass
+generic_package_id	7190	pass
+generic_package_file_count	10	pass
+authenticated_download_parity	10/10	pass

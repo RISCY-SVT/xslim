@@ -1,0 +1,11 @@
+field	value	status
+login	Custler	pass
+user_id	30170782	pass
+repository	RISCY-SVT/xslim	pass
+fork	true	pass
+parent	spacemit-com/xslim	pass
+visibility	public	pass
+default_branch	main	pass
+main_commit	9a33f2f770d00fd02ff8bc0f1907135e9bf47f8c	pass
+actions_permissions_http	200	pass
+actions_enabled	false	pass

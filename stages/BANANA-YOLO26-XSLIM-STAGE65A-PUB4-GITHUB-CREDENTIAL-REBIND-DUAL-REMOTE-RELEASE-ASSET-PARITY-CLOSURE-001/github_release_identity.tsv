@@ -1,0 +1,12 @@
+field	value	status
+release_id	366846729	pass
+release_node_id	RE_kwDOTuTccM4V3aMJ	pass
+tag_name	v2.1.2-riscy.1	pass
+tag_object	604507c45c8eb2ff5c548d30d981203fedc61ea3	pass
+tag_peeled_commit	12647b4a79fe5ec9a3973515a17cece4cb83daf4	pass
+draft	false	pass
+prerelease	false	pass
+published_at	2026-08-07T15:41:45Z	pass
+release_url	https://github.com/RISCY-SVT/xslim/releases/tag/v2.1.2-riscy.1	pass
+asset_count	10	pass
+anonymous_download_parity	10/10	pass

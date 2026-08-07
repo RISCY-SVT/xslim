@@ -1,0 +1,6 @@
+surface	query	result	status
+github_release_by_tag	v2.1.2-riscy.1	HTTP 404 before mutation	pass
+github_release_list	v2.1.2-riscy.1 absent	0 matching objects	pass
+gitlab_release_by_tag	v2.1.2-riscy.1	HTTP 404 before mutation	pass
+gitlab_release_list	v2.1.2-riscy.1 absent	0 matching objects	pass
+gitlab_generic_package	xslim/v2.1.2-riscy.1	0 matching packages before upload	pass

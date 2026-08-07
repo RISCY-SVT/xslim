@@ -1,0 +1,10 @@
+surface	archive	path_safety	link_device_safety	status
+local	wheel	pass	pass	pass
+local	sdist	pass	pass	pass
+local	source_archive	pass	pass	pass
+github_anonymous	wheel	pass	pass	pass
+github_anonymous	sdist	pass	pass	pass
+github_anonymous	source_archive	pass	pass	pass
+gitlab_authenticated	wheel	pass	pass	pass
+gitlab_authenticated	sdist	pass	pass	pass
+gitlab_authenticated	source_archive	pass	pass	pass

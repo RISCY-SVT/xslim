@@ -1,0 +1,10 @@
+{
+  "full_name": "RISCY-SVT/xslim",
+  "fork": true,
+  "parent": "spacemit-com/xslim",
+  "visibility": "public",
+  "default_branch": "main",
+  "has_issues": true,
+  "description": "Unofficial RISCY-SVT XSlim fork with K1X/YOLO26 validation hardening; based on spacemit-com/xslim.",
+  "homepage": "https://github.com/RISCY-SVT/xslim/tree/v2.1.2-riscy.1"
+}

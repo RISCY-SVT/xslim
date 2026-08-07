@@ -1,0 +1,31 @@
+{
+  "stage_id": "BANANA-YOLO26-XSLIM-STAGE65A-PUB4-GITHUB-CREDENTIAL-REBIND-DUAL-REMOTE-RELEASE-ASSET-PARITY-CLOSURE-001",
+  "classification": "stage65a-pub4-github-credential-effective-dual-remote-release-and-ten-asset-parity-actions-disabled-pypi-untouched-publication-closure-pass",
+  "publication_classification": "dual-remote-release-and-asset-parity-pass",
+  "source": {
+    "clean_release_commit": "12647b4a79fe5ec9a3973515a17cece4cb83daf4",
+    "clean_release_tree": "9ebb21ae2277cf760ed436692c7bc6343ca88d31",
+    "tag_object": "604507c45c8eb2ff5c548d30d981203fedc61ea3",
+    "tag_peeled_commit": "12647b4a79fe5ec9a3973515a17cece4cb83daf4"
+  },
+  "payload_tree_sha256": "99b90ede34df19e8ebc54353c94712b3f888f135065f97c1a638b2941c95a893",
+  "github": {
+    "release_id": 366846729,
+    "release_url": "https://github.com/RISCY-SVT/xslim/releases/tag/v2.1.2-riscy.1",
+    "asset_count": 10,
+    "anonymous_asset_parity": true,
+    "actions_enabled": false,
+    "workflow_runs_at_0_15_30_60_120_seconds": [0, 0, 0, 0, 0]
+  },
+  "gitlab": {
+    "project_id": 2158,
+    "release_url": "https://gitlab.itglobal.com/riscy/sw/xslim/-/releases/v2.1.2-riscy.1",
+    "generic_package_id": 7190,
+    "asset_count": 10,
+    "authenticated_asset_parity": true
+  },
+  "pypi_published": false,
+  "protected_projects_unchanged": true,
+  "stage65b_executed": false,
+  "timestamp_utc": "2026-08-07T15:50:23Z"
+}

@@ -1,0 +1,10 @@
+field	value	status
+release_id	366846729	pass
+tag_name	v2.1.2-riscy.1	pass
+name	XSlim 2.1.2+riscy.1 - unofficial RISCY-SVT K1X/YOLO hardening release	pass
+draft	true	pass
+prerelease	false	pass
+asset_count	10	pass
+tag_object	604507c45c8eb2ff5c548d30d981203fedc61ea3	pass
+tag_peeled_commit	12647b4a79fe5ec9a3973515a17cece4cb83daf4	pass
+authenticated_download_parity	10/10	pass
