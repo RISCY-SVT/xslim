@@ -1,0 +1,14 @@
+field	value
+classification	xslim-dev-001a-all-s8-policy-a-host-pass-candidate-freeze-ready-for-separate-k1x-gate
+candidate	A1
+policy	T6 terminal constrained asymmetric KL ranges only
+deployable_sha256	8fad9fa0e385f58da281d963c5e18b010c80c402dcbeed0b46e3ca3065d010f3
+inference_sha256	f7c5345f68cf79a5c3748274239a14cdaa59f77eac0425f7771694febaa24632
+tail_sha256	18ffff41e6812fa781baf7b9c1fcd41b41d6118145d785c3e550499070a512a3
+h500_delta_map50_95	0.007062946089587463
+h500_ci95	0.0020174118092847583..0.013001502290423603
+full_val_delta_map50_95	0.0070759247238641465
+full_val_ci95	0.005987303440000596..0.009787551791058951
+conformance	812 QDQ; 0 QLinear; 0 UINT8; 0 FP16; 102/102 Conv kernel_shape; six outputs; exact FP32 tail
+board_status	not-run-not-authorized
+publication_status	development-only-not-published

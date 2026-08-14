@@ -7,3 +7,9 @@ The implementation does not embed private model tensor names. Explicit tensor or
 The profile validates graph structure only. It does not claim provider placement, fusion, kernel selection, latency, or board stability.
 
 Version `2.1.2+riscy.2.dev1` is a development artifact. No tag, release, or PyPI publication is part of this stage.
+
+Host qualification selected the terminal-domain-only A1 policy. The generated all-S8
+candidate improved H500 by `0.007062946` mAP and full val2017 by `0.007075925`
+mAP over the frozen B2 control, with positive paired-bootstrap confidence intervals.
+The detailed task evidence remains in the Banana research branch and result packet;
+this source repository records only the compact identity summary below.
