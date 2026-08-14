@@ -1,0 +1,10 @@
+surface	result	detail
+full-pytest	pass	174 passed; 2 warnings; 65 subtests
+focused-range-selector-profile	pass	27 passed
+ruff	pass	source and tests
+compileall	pass	src and tests
+focused-mypy	pass	new range-policy and profile modules; imports skipped and missing imports ignored
+inherited-mypy	debt	971 existing/import-chain errors across 69 files; non-gating
+fresh-wheel-install	pass	pip check plus three CLI help smokes
+fresh-sdist-install	pass	pip check plus three CLI help smokes
+no-override	pass	deployable, split inference, and tail byte-identical to frozen B2
