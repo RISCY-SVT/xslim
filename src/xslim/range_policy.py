@@ -184,7 +184,7 @@ def _weighted_quantile(points: np.ndarray, weights: np.ndarray, quantile: float)
     order = np.argsort(points, kind="mergesort")
     ordered_points = points[order]
     ordered_weights = weights[order]
-    cumulative = np.cumsum(ordered_weights)
+    cumulative: np.ndarray = np.cumsum(ordered_weights)
     threshold = float(quantile) * float(cumulative[-1])
     index = int(np.searchsorted(cumulative, threshold, side="left"))
     return float(ordered_points[min(index, ordered_points.size - 1)])
@@ -206,7 +206,7 @@ def _required_scale(lower: float, upper: float, zero_point: int, epsilon: float)
 
 
 def _kl_loss(codes: np.ndarray, probability: np.ndarray) -> float:
-    shifted = codes.astype(np.int16) - QUANT_MIN
+    shifted: np.ndarray = codes.astype(np.int16) - QUANT_MIN
     mass = np.bincount(shifted, weights=probability, minlength=256)
     occupied = np.bincount(shifted, weights=(probability > 0).astype(np.float64), minlength=256)
     q = mass[shifted] / np.maximum(occupied[shifted], 1.0)
@@ -283,7 +283,9 @@ def _search(
         upper_scale = max(lower_scale, max(candidate_scales) * 1.125)
         if upper_scale > lower_scale * (1.0 + 1.0e-12):
             candidate_scales.update(np.geomspace(lower_scale, upper_scale, int(spec.search_steps)).tolist())
-        scales = np.asarray(sorted({float(max(item, minimum_scale)) for item in candidate_scales}), dtype=np.float64)
+        scales: np.ndarray = np.asarray(
+            sorted({float(max(item, minimum_scale)) for item in candidate_scales}), dtype=np.float64
+        )
 
         raw_codes = np.rint(points[None, :] / scales[:, None] + zero_point)
         codes = np.clip(raw_codes, QUANT_MIN, QUANT_MAX)
@@ -372,7 +374,7 @@ def _search(
 def select_qparams(values: Union[np.ndarray, Sequence[float]], spec: ConstrainedRangeSpec) -> RangeSelection:
     """Select deterministic signed per-tensor Q/DQ parameters from samples."""
 
-    array = np.asarray(values, dtype=np.float64).reshape(-1)
+    array: np.ndarray = np.asarray(values, dtype=np.float64).reshape(-1)
     if array.size == 0:
         raise RangePolicyError("cannot select a range from an empty tensor")
     if not np.all(np.isfinite(array)):
@@ -389,7 +391,7 @@ def select_histogram_qparams(
 ) -> RangeSelection:
     """Select qparams from an evenly spaced observed-value histogram."""
 
-    counts = np.asarray(histogram, dtype=np.float64).reshape(-1)
+    counts: np.ndarray = np.asarray(histogram, dtype=np.float64).reshape(-1)
     if counts.size == 0 or np.sum(counts) <= 0:
         raise RangePolicyError("histogram has no observations")
     if np.any(counts < 0) or not np.all(np.isfinite(counts)):
@@ -401,8 +403,8 @@ def select_histogram_qparams(
     if observed_max < observed_min:
         raise RangePolicyError("histogram observed_max must be >= observed_min")
     if observed_max == observed_min:
-        points = np.asarray([observed_min], dtype=np.float64)
-        weights = np.asarray([float(np.sum(counts))], dtype=np.float64)
+        points: np.ndarray = np.asarray([observed_min], dtype=np.float64)
+        weights: np.ndarray = np.asarray([float(np.sum(counts))], dtype=np.float64)
     else:
         width = (observed_max - observed_min) / counts.size
         points = observed_min + (np.arange(counts.size, dtype=np.float64) + 0.5) * width
