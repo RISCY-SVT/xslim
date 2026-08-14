@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # Copyright (c) 2023 SpacemiT. All rights reserved.
+# Modified by RISCY-SVT in 2026: add constrained asymmetric signed-INT8 observation.
 import functools
 import math
 import time
@@ -10,6 +11,7 @@ import torch
 from xslim.logger import logger
 
 from ..defs import OBSERVER_FLOATING_MSE_FETCHES, OBSERVER_MIN_SCALE_THRESHOLD, OBSERVER_PERCENTILE
+from ..range_policy import ConstrainedRangeSpec, select_histogram_qparams
 from ..ppq_decorator import (
     BaseTensorObserver,
     QuantizationProperty,
@@ -22,6 +24,7 @@ from ..ppq_decorator import (
     ppq_quant_param_computing_function,
     torch_KL_divergence,
 )
+from .local_policy import RANGE_POLICY_DETAIL_KEY, RANGE_POLICY_RESULT_KEY
 
 
 class TorchXSlimObserver(BaseTensorObserver):
@@ -482,6 +485,47 @@ class TorchXSlimKLObserver(TorchXSlimObserver):
         super().__init__(watch_on, quant_cfg, hist_bins, "kl")
 
 
+class TorchConstrainedRangeObserver(TorchXSlimObserver):
+    """Histogram observer whose affine domain obeys explicit constraints."""
+
+    @ppq_quant_param_computing_function
+    def hist_to_scale_offset(
+        self,
+        histogram: torch.Tensor,
+        hist_bins: int,
+        hist_scale: float,
+        config: TensorQuantizationConfig,
+        scale_threshold: float = OBSERVER_MIN_SCALE_THRESHOLD,
+    ) -> Tuple[float, int]:
+        if config.quant_min != -128 or config.quant_max != 127:
+            raise ValueError("constrained_range observer requires signed INT8 [-128, 127]")
+        if not config.policy.has_property(QuantizationProperty.ASYMMETRICAL):
+            raise ValueError("constrained_range observer requires asymmetric quantization")
+        if not config.policy.has_property(QuantizationProperty.PER_TENSOR):
+            raise ValueError("constrained_range observer requires per-tensor quantization")
+        raw_policy = config.detail.get(RANGE_POLICY_DETAIL_KEY)
+        if not isinstance(raw_policy, dict):
+            raise ValueError("constrained_range observer has no bound range policy")
+        result = select_histogram_qparams(
+            histogram.detach().cpu().numpy(),
+            observed_min=float(self._full_min_val),
+            observed_max=float(self._full_max_val),
+            spec=ConstrainedRangeSpec.from_mapping(raw_policy),
+        )
+        config.detail[RANGE_POLICY_RESULT_KEY] = result.to_dict()
+        logger.info(
+            "constrained range {}: scale={} zero_point={} range=[{}, {}]".format(
+                self._watch_on.name,
+                result.scale,
+                result.zero_point,
+                result.representable_min,
+                result.representable_max,
+            )
+        )
+        return result.scale, result.zero_point
+
+
 ppq_observer.OBSERVER_TABLE["kl"] = TorchXSlimKLObserver
 ppq_observer.OBSERVER_TABLE["mse"] = TorchXSlimMSEObserver
 ppq_observer.OBSERVER_TABLE["xslim"] = TorchXSlimObserver
+ppq_observer.OBSERVER_TABLE["constrained_range"] = TorchConstrainedRangeObserver

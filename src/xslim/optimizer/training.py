@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # Copyright (c) 2023 SpacemiT. All rights reserved.
+# Modified by RISCY-SVT in 2026: keep explicitly constrained activation qparams immutable during LSQ.
 import functools
 import random
 from collections import defaultdict
@@ -29,6 +30,7 @@ from ..ppq_decorator import (
     torch_mean_square_error,
     torch_snr_error,
 )
+from .local_policy import qparams_are_locked
 
 
 class XSlimTrainableBlock(TrainableBlock):
@@ -411,13 +413,16 @@ class LearnedStepSizePassDecorator(LearnedStepSizePass):
                 if cfg.detail.get("NONE_VALUE", False):
                     continue
                 if cfg.state in {QuantizationStates.ACTIVATED}:
+                    qparams_locked = qparams_are_locked(cfg)
                     offset_trainable = (
-                        cfg.policy.has_property(QuantizationProperty.ASYMMETRICAL) and self.is_scale_trainable
+                        cfg.policy.has_property(QuantizationProperty.ASYMMETRICAL)
+                        and self.is_scale_trainable
+                        and not qparams_locked
                     )
                     delegator = LSQDelegatorDecorator(
                         config=cfg,
                         var=var,
-                        is_scale_trainable=self.is_scale_trainable,
+                        is_scale_trainable=self.is_scale_trainable and not qparams_locked,
                         is_offset_trainable=offset_trainable,
                     )
                     trainable_scales.extend(delegator.trainable_tensors())

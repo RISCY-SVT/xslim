@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # Copyright (c) 2023 SpacemiT. All rights reserved.
+# Modified by RISCY-SVT in 2026: integrate opt-in post-fusion constrained range policies.
 import functools
 import os
 from collections import OrderedDict
@@ -13,9 +14,11 @@ from xslim.logger import logger
 from ..defs import (PASSIVE_OPERATIONS, XQUANT_CONFIG, AutoFinetuneLevel,
                     PrecisionLevel)
 from ..optimizer import (ActivationClipRefine, AsymmetricaUnsignlAlignSign,
-                         ComputingFusionPass, FlattenGemmFusionPass,
+                         ComputingFusionPass, ConstrainedRangeFinalizePass,
+                         FlattenGemmFusionPass,
                          FormatBatchNormalizationPass, HardSwishFusionPass,
-                         PassiveParameterBakingPass, QuantizeConfigRefinePass,
+                         LocalPolicyRebindPass, PassiveParameterBakingPass,
+                         QuantizeConfigRefinePass,
                          RuntimeBlockWiseCalibrationPass, SwishFusionPass,
                          XSlimLayerwiseEqualizationPass)
 from ..ppq_decorator import (BaseGraph, BaseGraphExecutor, GraphReplacer,
@@ -386,6 +389,15 @@ class XSlimQuantizer:
 
         list_of_passes.append(ActivationClipRefine())
 
+        custom_setting = setting.quantization_parameters.custom_setting
+        if custom_setting:
+            list_of_passes.append(
+                LocalPolicyRebindPass(
+                    custom_setting,
+                    setting.quantization_parameters.range_policy_manifest_path,
+                )
+            )
+
         list_of_passes.append(PassiveParameterBakingPass())
 
         list_of_passes.append(ParameterQuantizePass(method="minmax"))
@@ -398,6 +410,11 @@ class XSlimQuantizer:
                 auto_finetune_level=setting.quantization_parameters.finetune_level.value,
             )
         )
+
+        if custom_setting:
+            list_of_passes.append(
+                ConstrainedRangeFinalizePass(setting.quantization_parameters.range_policy_manifest_path)
+            )
 
         list_of_passes.append(ParameterBakingPass())
         list_of_passes.append(PassiveParameterBakingPass())

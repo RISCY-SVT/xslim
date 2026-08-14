@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # Copyright (c) 2023 SpacemiT. All rights reserved.
+# Modified by RISCY-SVT in 2026: export local constrained-range optimization passes.
 from .calibration import RuntimeBlockWiseCalibrationPass
 from .equalization import XSlimLayerwiseEqualizationPass
 from .fusion import (
@@ -10,7 +11,8 @@ from .fusion import (
     SwishFusionPass,
 )
 from .legalized import GraphLegalized
-from .observer import TorchXSlimKLObserver, TorchXSlimMSEObserver, TorchXSlimObserver
+from .local_policy import ConstrainedRangeFinalizePass, LocalPolicyRebindPass
+from .observer import TorchConstrainedRangeObserver, TorchXSlimKLObserver, TorchXSlimMSEObserver, TorchXSlimObserver
 from .refine import (
     ActivationClipRefine,
     AsymmetricaUnsignlAlignSign,

@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # Copyright (c) 2023 SpacemiT. All rights reserved.
+# Modified by RISCY-SVT in 2026: add fail-closed local constrained range settings.
 import copy
 import json
 import os
@@ -117,13 +118,95 @@ class InputParameterSetting(SettingSerialize):
                 "file_type {} not implemented yet.".format(self.file_type))
 
 
+class ConstrainedRangePolicySetting(SettingSerialize):
+    """Optional signed per-tensor range override for an explicitly selected domain."""
+
+    def __init__(self) -> None:
+        self.enabled: bool = False
+        self.strict: bool = True
+        self.objective: str = "constrained-mse"
+        self.preserve_zero: bool = True
+        self.required_real_min: Optional[float] = None
+        self.required_real_max: Optional[float] = None
+        self.semantic_floor: Optional[Union[str, float]] = None
+        self.percentile: float = 0.9999
+        self.search_steps: int = 32
+        self.scale_epsilon: float = 1.0e-12
+        self.lock_qparams: bool = True
+
+    def from_json(self, obj_setting: dict, qsetting):
+        unknown = sorted(set(obj_setting) - set(self.__dict__))
+        if unknown:
+            raise ValueError("unknown range_policy fields: {}".format(", ".join(unknown)))
+        super().from_json(obj_setting, qsetting)
+
+    def check(self, qsetting):
+        from .range_policy import ConstrainedRangeSpec
+
+        ConstrainedRangeSpec(
+            objective=self.objective,
+            preserve_zero=self.preserve_zero,
+            required_real_min=self.required_real_min,
+            required_real_max=self.required_real_max,
+            semantic_floor=self.semantic_floor,
+            percentile=self.percentile,
+            search_steps=self.search_steps,
+            scale_epsilon=self.scale_epsilon,
+        )
+        if not isinstance(self.enabled, bool):
+            raise TypeError("range_policy.enabled must be bool")
+        if not isinstance(self.strict, bool):
+            raise TypeError("range_policy.strict must be bool")
+        if not isinstance(self.lock_qparams, bool):
+            raise TypeError("range_policy.lock_qparams must be bool")
+
+    def to_spec_dict(self) -> Dict[str, object]:
+        return {
+            "objective": self.objective,
+            "preserve_zero": self.preserve_zero,
+            "required_real_min": self.required_real_min,
+            "required_real_max": self.required_real_max,
+            "semantic_floor": self.semantic_floor,
+            "percentile": self.percentile,
+            "search_steps": self.search_steps,
+            "scale_epsilon": self.scale_epsilon,
+        }
+
+
 class CustomQuantizationParameterSetting(SettingSerialize):
     def __init__(self) -> None:
+        self.name: str = None
         self.input_names: Sequence[str] = None
         self.output_names: Sequence[str] = None
+        self.tensor_names: Sequence[str] = None
         self.max_percentile: float = None
         self.precision_level: int = None
         self.calibration_type: str = None
+        self.range_policy: ConstrainedRangePolicySetting = ConstrainedRangePolicySetting()
+
+    def check(self, qsetting):
+        for field_name in ("input_names", "output_names", "tensor_names"):
+            value = getattr(self, field_name)
+            if value is not None and (
+                not isinstance(value, list) or not all(isinstance(item, str) and item for item in value)
+            ):
+                raise TypeError("{} must be a list of non-empty tensor names".format(field_name))
+        if self.name is not None and (not isinstance(self.name, str) or not self.name):
+            raise TypeError("custom_setting.name must be a non-empty string")
+        if self.calibration_type is not None and self.calibration_type not in {
+            "default",
+            "minmax",
+            "percentile",
+            "kl",
+            "mse",
+        }:
+            raise ValueError("unsupported custom calibration_type {}".format(self.calibration_type))
+        if self.max_percentile is not None and not 0.5 < float(self.max_percentile) <= 1.0:
+            raise ValueError("custom max_percentile must be in (0.5, 1.0]")
+        if self.range_policy.enabled and not self.tensor_names and not (self.input_names and self.output_names):
+            raise ValueError(
+                "enabled range_policy requires tensor_names or a bounded input_names/output_names selector"
+            )
 
 
 class QuantizationParameterSetting(SettingSerialize):
@@ -132,6 +215,7 @@ class QuantizationParameterSetting(SettingSerialize):
         self.max_percentile: float = None
         self.finetune_level: AutoFinetuneLevel = AutoFinetuneLevel.LEVEL_1
         self.custom_setting: Sequence[CustomQuantizationParameterSetting] = None
+        self.range_policy_manifest_path: str = None
         self.analysis_enable: bool = True
         self.truncate_var_names: Sequence[str] = []
         self.ignore_op_types: Sequence[str] = []

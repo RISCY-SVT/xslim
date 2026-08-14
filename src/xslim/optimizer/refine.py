@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # Copyright (c) 2023 SpacemiT. All rights reserved.
+# Modified by RISCY-SVT in 2026: permit exact-tensor range settings beside legacy subgraph overrides.
 import math
 from typing import Callable, Dict, Iterable, List, Sequence, Set, Tuple, Union
 
@@ -394,4 +395,5 @@ class QuantizeConfigRefinePass(QuantizationOptimizationPass):
 
         if isinstance(self._custom_setting, Sequence):
             for tqc_setting in self._custom_setting:
-                self.custom_tqc_set(graph, tqc_setting)
+                if tqc_setting.input_names and tqc_setting.output_names:
+                    self.custom_tqc_set(graph, tqc_setting)
