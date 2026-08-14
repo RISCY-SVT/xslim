@@ -1,4 +1,4 @@
-# Modified by RISCY-SVT in 2026: add unofficial fork metadata and opt-in audit CLIs.
+# Modified by RISCY-SVT in 2026: add unofficial fork metadata and opt-in audit/profile CLIs.
 [build-system]
 requires = ["setuptools>=77", "wheel"]
 build-backend = "setuptools.build_meta"
@@ -51,6 +51,7 @@ Upstream = "https://github.com/spacemit-com/xslim"
 xslim = "xslim.__main__:main"
 xslim-yolo-output-check = "xslim.tools.yolo_output_check:main"
 xslim-qdq-boundary-audit = "xslim.tools.qdq_boundary_audit:main"
+xslim-spacemit-profile-check = "xslim.tools.spacemit_profile:main"
 
 [tool.setuptools]
 include-package-data = true

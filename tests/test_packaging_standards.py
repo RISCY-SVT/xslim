@@ -70,6 +70,10 @@ class TestPackagingStandards(unittest.TestCase):
             project["scripts"]["xslim-qdq-boundary-audit"],
             "xslim.tools.qdq_boundary_audit:main",
         )
+        self.assertEqual(
+            project["scripts"]["xslim-spacemit-profile-check"],
+            "xslim.tools.spacemit_profile:main",
+        )
         self.assertEqual(pyproject["tool"]["setuptools"]["package-dir"], {"": "src"})
         self.assertEqual(
             pyproject["tool"]["setuptools"]["packages"]["find"]["where"],
