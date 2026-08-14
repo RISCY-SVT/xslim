@@ -1,3 +1,4 @@
+# Modified by RISCY-SVT in 2026: distinguish immutable release provenance from downstream development.
 """RISCY-SVT release provenance and publication safety regressions."""
 
 from pathlib import Path
@@ -16,7 +17,8 @@ def test_upstream_provenance_constants_are_exact():
     assert UPSTREAM_TREE in upstream
     assert "05d2c842fb4407bed80fb688c533e43079850dd1" not in upstream
     assert f"`{UPSTREAM_VERSION}`" in upstream
-    assert (ROOT / "VERSION_NUMBER").read_text().strip() == "2.1.2+riscy.1"
+    assert (ROOT / "VERSION_NUMBER").read_text().strip() == "2.1.2+riscy.2.dev1"
+    assert "v2.1.2-riscy.1" in (ROOT / "RELEASE_NOTES.md").read_text(encoding="utf-8")
 
 
 def test_downstream_publish_workflow_is_fail_closed():
@@ -28,8 +30,10 @@ def test_downstream_publish_workflow_is_fail_closed():
     assert "RISCY-SVT/xslim'" not in workflow
 
 
-def test_clean_release_source_contains_no_stage_evidence():
-    assert not (ROOT / "stages").exists()
+def test_development_evidence_is_not_part_of_package_manifest():
+    manifest = (ROOT / "MANIFEST.in").read_text(encoding="utf-8")
+    assert "graft stages" not in manifest
+    assert "recursive-include stages" not in manifest
 
 
 def test_release_notes_keep_validated_and_unvalidated_claims_separate():

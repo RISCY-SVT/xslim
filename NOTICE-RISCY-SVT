@@ -12,3 +12,8 @@ configuration from an unvalidated vendor accuracy-tuning starting point. The
 fork's inherited PyPI workflow is guarded against downstream execution.
 
 This notice is informational and does not modify the Apache License 2.0.
+
+Unreleased downstream development after v2.1.2-riscy.1 is identified by the
+PEP 440 version 2.1.2+riscy.2.dev1. It adds opt-in constrained signed-INT8
+range selection and structural profile auditing. It is not a published
+release and does not establish runtime placement or performance.
