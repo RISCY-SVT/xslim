@@ -1,0 +1,12 @@
+surface	command_or_scope	result
+focused_reconstruction	pytest tests/test_reconstruction.py	16 passed
+full_inherited	pytest	207 passed; 4 inherited FP16-converter warnings; 65 subtests
+ruff_changed_source	ruff check changed Python files	pass
+strict_mypy_new_modules	mypy --strict --follow-imports=skip range_policy/reconstruction/spacemit_profile	pass; 0 errors
+strict_mypy_legacy_delta	same strict command on 6 changed legacy modules and frozen HEAD	126 current; 126 baseline; no new debt
+source_diff	git diff --check	pass
+banana_candidate_tools	pytest vendor_ort_validation/test_xslim_dev_001b_tools.py	12 passed
+banana_candidate_ruff	ruff check candidate tools/tests	pass
+wheel_fresh_install	pip check, package API, CLI help and compileall smokes	pass
+sdist_fresh_install	pip check, package API, CLI help and compileall smokes	pass
+installed_compileall	wheel and sdist environments	pass

@@ -1,0 +1,14 @@
+surface	legacy_behavior	new_behavior	status
+legacy_calibration_type	local observer assignment	no constrained finalization unless range_policy.enabled=true	pass
+legacy_max_percentile	local percentile assignment	no constrained finalization unless range_policy.enabled=true	pass
+legacy_symmetric	preserved	remains outside asymmetric constrained checks	pass
+legacy_per_channel	preserved	remains outside per-tensor constrained checks	pass
+legacy_fp32_region	preserved	no constrained ownership or finalization	pass
+legacy_no_match	preserved non-fatal behavior	strict no-match applies only to enabled constrained policy	pass
+mixed_legacy_constrained	unsupported ambiguity risk	deterministic separate ownership and fail-closed conflicts	pass
+lock_qparams_true	observer value could be restored implicitly	explicit observer-selected final/export equality	pass
+lock_qparams_false	semantics incomplete	reconstructed qparams retained and fully revalidated	pass
+small_array_kl	equal-point proxy	multiplicity-preserving deterministic distribution	pass
+activation_proxy	possible spatial phase bias	deterministic channel-by-spatial-tile coverage	pass
+spacemit_profile	basic S8-QDQ checks	FP16/MatMul/domain/external-data/reference-census hardening	pass
+block_training	global random shuffle	local derived RNG and sample-order manifest	pass
