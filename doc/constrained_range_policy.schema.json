@@ -22,6 +22,25 @@
         {"type": "null"}
       ]
     },
+    "required_intervals": {
+      "type": "array",
+      "default": [],
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "real_min", "real_max", "minimum_codes"],
+        "properties": {
+          "name": {"type": "string", "minLength": 1},
+          "real_min": {"type": "number"},
+          "real_max": {"type": "number"},
+          "minimum_codes": {"type": "integer", "minimum": 1, "maximum": 256}
+        }
+      }
+    },
+    "minimum_positive_codes": {"type": "integer", "minimum": 0, "maximum": 255, "default": 0},
+    "minimum_negative_codes": {"type": "integer", "minimum": 0, "maximum": 255, "default": 0},
+    "maximum_clipping_fraction": {"type": ["number", "null"], "minimum": 0.0, "maximum": 1.0},
+    "maximum_rail_fraction": {"type": ["number", "null"], "minimum": 0.0, "maximum": 1.0},
     "percentile": {"type": "number", "exclusiveMinimum": 0.5, "maximum": 1.0, "default": 0.9999},
     "search_steps": {"type": "integer", "minimum": 8, "maximum": 512, "default": 32},
     "scale_epsilon": {"type": "number", "exclusiveMinimum": 0.0, "default": 1e-12},

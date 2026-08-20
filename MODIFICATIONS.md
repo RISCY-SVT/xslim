@@ -12,12 +12,12 @@ additions; no ownership claim is made over upstream work.
 | `MANIFEST.in` | Include derivative provenance and notice files in source distributions. |
 | `README.md` | Identify the unofficial derivative and link provenance. |
 | `README_zh.md` | Identify the unofficial derivative and link provenance. |
-| `VERSION_NUMBER` | Advance the downstream branch to unreleased PEP 440 version `2.1.2+riscy.2.dev1`; published tag `v2.1.2-riscy.1` remains immutable. |
+| `VERSION_NUMBER` | Advance the downstream branch to unreleased PEP 440 version `2.1.2+riscy.2.dev2`; published tag `v2.1.2-riscy.1` remains immutable. |
 | `pyproject.toml` | Add fork URLs, upstream attribution, downstream maintainer metadata, opt-in audit/profile CLIs, and source-layout pytest configuration. |
 | `src/xslim/optimizer/__init__.py` | Export the downstream local constrained-range passes and observer. |
 | `src/xslim/optimizer/observer.py` | Add deterministic constrained asymmetric signed-INT8 histogram observation. |
 | `src/xslim/optimizer/refine.py` | Allow exact-tensor range settings without changing legacy bounded-subgraph settings. |
-| `src/xslim/optimizer/training.py` | Keep explicitly locked constrained qparams immutable during LSQ finetuning. |
+| `src/xslim/optimizer/training.py` | Keep locked constrained qparams immutable and derive block sample order from local deterministic seeds. |
 | `src/xslim/quantizer/xslim.py` | Insert opt-in post-fusion binding and post-calibration verification passes. |
 | `src/xslim/xslim_setting.py` | Add strict model-independent selector and constrained-range configuration fields. |
 | `src/xslim/ppq_decorator/ppq/executor/op/torch/default.py` | Preserve ONNX `ReduceMax` identity behavior when a selected reduction domain is empty. |
@@ -39,6 +39,8 @@ Its `+riscy.1` suffix is the prominent modification identification.
   packaging, and CLI behavior.
 - Generic constrained asymmetric INT8 range search, strict local selector,
   post-fusion binding/finalization, and property/integration regressions.
+- Generic deterministic channel/spatial sampling, adaptive weight rounding,
+  held-out block reconstruction, validation rollback, and bias correction.
 - A structural `spacemit_k1x_s8_qdq_split_v1` profile validator; it does not
   make provider-placement or performance claims.
 - Development documentation and schema in `DEVELOPMENT_NOTES.md`,
@@ -59,4 +61,4 @@ Its `+riscy.1` suffix is the prominent modification identification.
 - No YoloDecode matcher change was selected for this release.
 - The tagged release source contains no Stage evidence or raw lab artifacts.
 - The published `v2.1.2-riscy.1` tag and package remain unchanged; current
-  branch work uses the unreleased `2.1.2+riscy.2.dev1` development version.
+  branch work uses the unreleased `2.1.2+riscy.2.dev2` development version.

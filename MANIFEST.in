@@ -13,3 +13,5 @@ include VERSION_NUMBER
 include requirements.txt
 graft doc
 graft samples
+global-exclude *.py[cod]
+prune **/__pycache__
