@@ -16,6 +16,10 @@ blocks and caller-provided teacher/student adapters, uses deterministic local
 random generators, restores the best held-out checkpoint, and rolls back when
 validation does not improve. It emits ordinary static INT8 weight values and
 does not add training operators, QDQ boundaries, or floating-point islands.
+Callers may provide accepted signed-INT8 `initial_codes` as the exact rollback
+state. Elements whose accepted code belongs to the FP weight's current
+`{floor, ceil}` pair remain trainable; elements outside that pair are frozen at
+the accepted code instead of being silently requantized.
 
 The profile validates graph structure only. It does not prove provider
 placement, fusion, kernel selection, correctness on K1X, latency, stability,

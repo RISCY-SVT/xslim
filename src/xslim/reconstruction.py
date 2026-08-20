@@ -233,6 +233,7 @@ class AdaptiveWeightRounder(torch.nn.Module):  # type: ignore[misc]
         scale: torch.Tensor,
         zero_point: torch.Tensor,
         *,
+        initial_codes: Optional[torch.Tensor] = None,
         channel_axis: int = 0,
         quant_min: int = -128,
         quant_max: int = 127,
@@ -259,9 +260,31 @@ class AdaptiveWeightRounder(torch.nn.Module):  # type: ignore[misc]
             broadcast_shape[self.channel_axis] = scale.numel()
         normalized = weight / self.scale.reshape(broadcast_shape) + self.zero_point.reshape(broadcast_shape)
         floor = torch.floor(normalized).clamp(quant_min, quant_max)
+        ceil = (floor + 1.0).clamp(quant_min, quant_max)
         residual = (normalized - floor).clamp(1.0e-6, 1.0 - 1.0e-6)
         self.register_buffer("floor", floor)
         initial_alpha = torch.log(residual / (1.0 - residual))
+        if initial_codes is None:
+            fixed_codes = floor
+            trainable_mask = ceil != floor
+        else:
+            if initial_codes.dtype != torch.int8 or initial_codes.shape != weight.shape:
+                raise ReconstructionError(
+                    "initial weight codes must be signed INT8 and match the FP weight shape"
+                )
+            fixed_codes = initial_codes.detach().clone().to(device=weight.device, dtype=weight.dtype)
+            if torch.any(fixed_codes < quant_min) or torch.any(fixed_codes > quant_max):
+                raise ReconstructionError("initial weight codes are outside signed INT8")
+            trainable_mask = ((fixed_codes == floor) | (fixed_codes == ceil)) & (ceil != floor)
+            baseline_is_ceil = fixed_codes == ceil
+            magnitude = torch.abs(initial_alpha).clamp(min=1.0e-3, max=4.0)
+            initial_alpha = torch.where(
+                trainable_mask,
+                torch.where(baseline_is_ceil, magnitude, -magnitude),
+                initial_alpha,
+            )
+        self.register_buffer("fixed_codes", fixed_codes)
+        self.register_buffer("trainable_mask", trainable_mask)
         self.alpha = torch.nn.Parameter(initial_alpha.clone())
         self.register_buffer("initial_alpha", initial_alpha.detach().clone())
 
@@ -271,7 +294,8 @@ class AdaptiveWeightRounder(torch.nn.Module):  # type: ignore[misc]
     def codes(self, *, hard: bool = False) -> torch.Tensor:
         probability = self.probabilities()
         decision = (probability >= 0.5).to(probability.dtype) if hard else probability
-        return (self.floor + decision).clamp(self.quant_min, self.quant_max)
+        candidate = (self.floor + decision).clamp(self.quant_min, self.quant_max)
+        return torch.where(self.trainable_mask, candidate, self.fixed_codes)
 
     def dequantized(self, *, hard: bool = False) -> torch.Tensor:
         broadcast_shape = [1] * self.weight.ndim
@@ -283,7 +307,11 @@ class AdaptiveWeightRounder(torch.nn.Module):  # type: ignore[misc]
 
     def regularization(self) -> torch.Tensor:
         probability = self.probabilities()
-        return (1.0 - torch.abs(2.0 * probability - 1.0)).mean()
+        penalty = 1.0 - torch.abs(2.0 * probability - 1.0)
+        selected = penalty[self.trainable_mask]
+        if selected.numel() == 0:
+            return penalty.sum() * 0.0
+        return selected.mean()
 
     def hardened_codes(self) -> np.ndarray:
         return cast(np.ndarray, self.codes(hard=True).detach().cpu().numpy().astype(np.int8))

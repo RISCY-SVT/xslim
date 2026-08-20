@@ -72,7 +72,53 @@ def test_adaptive_rounding_hardens_to_static_signed_int8_codes():
     assert hardened.dtype == np.int8
     assert np.all(hardened >= -128)
     assert np.all(hardened <= 127)
-    assert list(rounder.state_dict()) == ["alpha", "weight", "scale", "zero_point", "floor", "initial_alpha"]
+    assert list(rounder.state_dict()) == [
+        "alpha",
+        "weight",
+        "scale",
+        "zero_point",
+        "floor",
+        "fixed_codes",
+        "trainable_mask",
+        "initial_alpha",
+    ]
+
+
+def test_adaptive_rounding_preserves_explicit_baseline_and_freezes_non_floor_ceil_codes():
+    rounder = AdaptiveWeightRounder(
+        torch.tensor([0.2, 1.8, -1.2]),
+        torch.tensor(1.0),
+        torch.tensor(0, dtype=torch.int8),
+        initial_codes=torch.tensor([0, 3, -1], dtype=torch.int8),
+    )
+    np.testing.assert_array_equal(
+        rounder.hardened_codes(),
+        np.asarray([0, 3, -1], dtype=np.int8),
+    )
+    assert rounder.trainable_mask.tolist() == [True, False, True]
+
+    rounder.alpha.data.copy_(torch.tensor([10.0, -10.0, -10.0]))
+    np.testing.assert_array_equal(
+        rounder.hardened_codes(),
+        np.asarray([1, 3, -2], dtype=np.int8),
+    )
+
+
+def test_adaptive_rounding_rejects_invalid_explicit_baseline_codes():
+    with pytest.raises(ReconstructionError, match="signed INT8"):
+        AdaptiveWeightRounder(
+            torch.ones(2),
+            torch.tensor(1.0),
+            torch.tensor(0, dtype=torch.int8),
+            initial_codes=torch.ones(2, dtype=torch.int16),
+        )
+    with pytest.raises(ReconstructionError, match="match the FP weight shape"):
+        AdaptiveWeightRounder(
+            torch.ones(2),
+            torch.tensor(1.0),
+            torch.tensor(0, dtype=torch.int8),
+            initial_codes=torch.ones(1, dtype=torch.int8),
+        )
 
 
 def _run_correlated_reconstruction():
