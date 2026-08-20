@@ -11,7 +11,12 @@ from .fusion import (
     SwishFusionPass,
 )
 from .legalized import GraphLegalized
-from .local_policy import ConstrainedRangeFinalizePass, LocalPolicyRebindPass
+from .local_policy import (
+    ConstrainedRangeFinalizePass,
+    LocalPolicyRebindPass,
+    has_enabled_range_policy,
+    verify_exported_qparams,
+)
 from .observer import TorchConstrainedRangeObserver, TorchXSlimKLObserver, TorchXSlimMSEObserver, TorchXSlimObserver
 from .refine import (
     ActivationClipRefine,

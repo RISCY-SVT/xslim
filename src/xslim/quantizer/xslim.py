@@ -20,7 +20,8 @@ from ..optimizer import (ActivationClipRefine, AsymmetricaUnsignlAlignSign,
                          LocalPolicyRebindPass, PassiveParameterBakingPass,
                          QuantizeConfigRefinePass,
                          RuntimeBlockWiseCalibrationPass, SwishFusionPass,
-                         XSlimLayerwiseEqualizationPass)
+                         XSlimLayerwiseEqualizationPass,
+                         has_enabled_range_policy)
 from ..ppq_decorator import (BaseGraph, BaseGraphExecutor, GraphReplacer,
                              Operation, OperationQuantizationConfig,
                              ParameterBakingPass, ParameterQuantizePass,
@@ -411,7 +412,7 @@ class XSlimQuantizer:
             )
         )
 
-        if custom_setting:
+        if has_enabled_range_policy(custom_setting):
             list_of_passes.append(
                 ConstrainedRangeFinalizePass(setting.quantization_parameters.range_policy_manifest_path)
             )

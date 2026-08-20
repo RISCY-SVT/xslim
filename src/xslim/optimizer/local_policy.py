@@ -24,13 +24,19 @@ from ..ppq_decorator import (
     empty_ppq_cache,
     ppq_common,
 )
-from ..range_policy import ConstrainedRangeSpec
+from ..range_policy import (
+    ConstrainedRangeSpec,
+    RangePolicyError,
+    evaluate_histogram_qparams,
+    validate_qparams_contract,
+)
 
 
 RANGE_POLICY_DETAIL_KEY = "RISCY_CONSTRAINED_RANGE_POLICY_V1"
 RANGE_POLICY_TARGETS_KEY = "RISCY_CONSTRAINED_RANGE_TARGETS_V1"
 RANGE_POLICY_LOCK_KEY = "RISCY_CONSTRAINED_RANGE_LOCK_QPARAMS_V1"
 RANGE_POLICY_RESULT_KEY = "RISCY_CONSTRAINED_RANGE_RESULT_V1"
+RANGE_POLICY_OBSERVATION_KEY = "RISCY_CONSTRAINED_RANGE_OBSERVATION_V1"
 LOCAL_POLICY_MANIFEST_KEY = "RISCY_LOCAL_POLICY_MANIFEST_V1"
 LOCAL_POLICY_ASSIGNMENT_KEY = "RISCY_LOCAL_POLICY_ASSIGNMENT_V1"
 CONSTRAINED_OBSERVER = "constrained_range"
@@ -136,6 +142,12 @@ def qparams_are_locked(config: TensorQuantizationConfig) -> bool:
     return bool(config.dominated_by.detail.get(RANGE_POLICY_LOCK_KEY, False))
 
 
+def has_enabled_range_policy(settings: Sequence[Any]) -> bool:
+    """Return whether any custom setting explicitly enables constrained finalization."""
+
+    return any(_normalized_policy(setting)["enabled"] for setting in settings or [])
+
+
 def _bounded_region_variables(graph: BaseGraph, input_names: Sequence[str], output_names: Sequence[str]) -> Set[Variable]:
     if not input_names or not output_names:
         raise ValueError("bounded subgraph selector requires input_names and output_names")
@@ -239,6 +251,70 @@ def _write_manifest(path: Optional[str], manifest: Dict[str, Any]) -> None:
     destination.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
 
+def verify_exported_qparams(model: Any, manifest_path: Optional[str]) -> None:
+    """Verify selected qparams against the exact Q/DQ initializers in exported ONNX."""
+
+    if not manifest_path:
+        return
+    destination = Path(manifest_path)
+    if not destination.is_file():
+        raise RuntimeError(f"range-policy manifest is missing before export audit: {destination}")
+    manifest = json.loads(destination.read_text(encoding="utf-8"))
+    entries = manifest.get("final_qparams", [])
+    if not entries:
+        return
+
+    from onnx import numpy_helper
+
+    initializers = {item.name: numpy_helper.to_array(item) for item in model.graph.initializer}
+    producers = {output: node for node in model.graph.node for output in node.output if output}
+    dq_nodes = [node for node in model.graph.node if node.op_type == "DequantizeLinear"]
+    for entry in entries:
+        targets = set(entry["tensor_names"])
+        matches = [node for node in dq_nodes if targets.intersection(node.output)]
+        if len(matches) != 1:
+            raise RuntimeError(
+                "exported constrained domain {!r} matched {} DequantizeLinear nodes".format(
+                    sorted(targets), len(matches)
+                )
+            )
+        dq_node = matches[0]
+        if len(dq_node.input) < 3 or dq_node.input[1] not in initializers or dq_node.input[2] not in initializers:
+            raise RuntimeError("exported constrained DQ has dynamic or missing qparams")
+        scale_array = initializers[dq_node.input[1]]
+        zero_point_array = initializers[dq_node.input[2]]
+        if scale_array.size != 1 or zero_point_array.size != 1:
+            raise RuntimeError("exported constrained DQ is not per-tensor")
+        exported_scale = float(scale_array.reshape(()))
+        exported_zero_point = int(zero_point_array.reshape(()))
+        expected_scale = float(entry["final_scale"])
+        expected_zero_point = int(entry["final_zero_point"])
+        if float(torch.tensor(expected_scale, dtype=torch.float32).item()) != exported_scale:
+            raise RuntimeError("exported constrained scale differs from finalized manifest")
+        if expected_zero_point != exported_zero_point:
+            raise RuntimeError("exported constrained zero point differs from finalized manifest")
+        q_node = producers.get(dq_node.input[0])
+        if q_node is None or q_node.op_type != "QuantizeLinear":
+            raise RuntimeError("exported constrained DQ is not paired with QuantizeLinear")
+        if len(q_node.input) < 3 or q_node.input[1] not in initializers or q_node.input[2] not in initializers:
+            raise RuntimeError("exported constrained Q has dynamic or missing qparams")
+        q_scale = initializers[q_node.input[1]]
+        q_zero_point = initializers[q_node.input[2]]
+        if q_scale.dtype != scale_array.dtype or q_scale.tobytes() != scale_array.tobytes():
+            raise RuntimeError("exported constrained Q/DQ scales differ")
+        if q_zero_point.dtype != zero_point_array.dtype or q_zero_point.tobytes() != zero_point_array.tobytes():
+            raise RuntimeError("exported constrained Q/DQ zero points differ")
+        entry["exported_scale"] = exported_scale
+        entry["exported_zero_point"] = exported_zero_point
+        entry["exported_q_node"] = q_node.name or q_node.output[0]
+        entry["exported_dq_node"] = dq_node.name or dq_node.output[0]
+        entry["exported_equal"] = True
+
+    manifest["phase"] = "post-export-verified"
+    manifest["exported_qparams_equal"] = True
+    _write_manifest(manifest_path, manifest)
+
+
 class LocalPolicyRebindPass(QuantizationOptimizationPass):
     """Bind local settings to final post-fusion quantization roots."""
 
@@ -265,7 +341,7 @@ class LocalPolicyRebindPass(QuantizationOptimizationPass):
             tensor_names = _setting_value(setting, "tensor_names") or []
             if tensor_names:
                 missing = sorted(set(tensor_names) - set(graph.variables))
-                if missing and policy["strict"]:
+                if missing and policy["enabled"] and policy["strict"]:
                     raise ValueError(
                         "range policy {!r} did not match tensors: {}".format(
                             _policy_name(setting, original_index), ", ".join(missing)
@@ -275,7 +351,11 @@ class LocalPolicyRebindPass(QuantizationOptimizationPass):
             else:
                 input_names = _setting_value(setting, "input_names") or []
                 output_names = _setting_value(setting, "output_names") or []
-                variables = _bounded_region_variables(graph, input_names, output_names)
+                selector_names = set(input_names) | set(output_names)
+                if not policy["enabled"] and not selector_names <= set(graph.variables):
+                    variables = set()
+                else:
+                    variables = _bounded_region_variables(graph, input_names, output_names)
 
             local_policy = {
                 "calibration_type": _setting_value(setting, "calibration_type"),
@@ -290,7 +370,7 @@ class LocalPolicyRebindPass(QuantizationOptimizationPass):
                 configs = by_variable.get(variable, [])
                 roots_for_var = {id(config.dominated_by): config.dominated_by for config in configs}
                 if not roots_for_var:
-                    if policy["strict"]:
+                    if policy["enabled"] and policy["strict"]:
                         raise ValueError(f"selected tensor {variable.name!r} has no quantization configuration")
                     continue
                 if policy["enabled"] and len(roots_for_var) != 1:
@@ -392,7 +472,7 @@ class ConstrainedRangeFinalizePass(QuantizationOptimizationPass):
                 continue
             for config, _ in operation.config_with_variable:
                 root = config.dominated_by
-                if LOCAL_POLICY_ASSIGNMENT_KEY in root.detail:
+                if RANGE_POLICY_DETAIL_KEY in root.detail:
                     roots[id(root)] = root
         entries = []
         for root in sorted(roots.values(), key=lambda item: _stable_root_name(item, descriptors)):
@@ -404,7 +484,7 @@ class ConstrainedRangeFinalizePass(QuantizationOptimizationPass):
                     "constrained observer did not emit qparams for {}".format(_stable_root_name(root, descriptors))
                 )
             if root.scale is None or root.offset is None:
-                raise RuntimeError("local observer did not emit final qparams")
+                raise RuntimeError("constrained observer did not emit final qparams")
             current_scale = (
                 root.scale.detach().cpu().reshape(-1)[0].item()
                 if isinstance(root.scale, torch.Tensor)
@@ -415,12 +495,11 @@ class ConstrainedRangeFinalizePass(QuantizationOptimizationPass):
                 if isinstance(root.offset, torch.Tensor)
                 else root.offset
             )
-            scale = float(result["scale"] if is_constrained else current_scale)
-            zero_point = int(
-                result["zero_point"]
-                if is_constrained
-                else round(float(current_offset))
-            )
+            initial_scale = float(result["scale"])
+            initial_zero_point = int(result["zero_point"])
+            locked = bool(root.detail.get(RANGE_POLICY_LOCK_KEY, False))
+            scale = initial_scale if locked else float(current_scale)
+            zero_point = initial_zero_point if locked else int(round(float(current_offset)))
             if not math.isfinite(scale) or scale <= 0:
                 raise RuntimeError("constrained observer emitted invalid scale")
             if root.quant_min != -128 or root.quant_max != 127:
@@ -429,30 +508,51 @@ class ConstrainedRangeFinalizePass(QuantizationOptimizationPass):
                 raise RuntimeError("constrained range policy requires per-tensor quantization")
             if not root.policy.has_property(QuantizationProperty.ASYMMETRICAL):
                 raise RuntimeError("constrained range policy requires asymmetric quantization")
-            if is_constrained:
-                device = root.scale.device if isinstance(root.scale, torch.Tensor) else torch.device("cpu")
-                root.scale = torch.tensor(scale, dtype=torch.float32, device=device)
-                root.offset = torch.tensor(float(zero_point), dtype=torch.float32, device=device)
-                root.state = QuantizationStates.ACTIVATED
+            device = root.scale.device if isinstance(root.scale, torch.Tensor) else torch.device("cpu")
+            root.scale = torch.tensor(scale, dtype=torch.float32, device=device)
+            root.offset = torch.tensor(float(zero_point), dtype=torch.float32, device=device)
+            root.state = QuantizationStates.ACTIVATED
             representable_min = (root.quant_min - zero_point) * scale
             representable_max = (root.quant_max - zero_point) * scale
-            if is_constrained:
-                spec = ConstrainedRangeSpec.from_mapping(root.detail[RANGE_POLICY_DETAIL_KEY])
-                if spec.required_real_min is not None and representable_min > spec.required_real_min + scale * 1.0e-6:
-                    raise RuntimeError("final qparams violate required_real_min")
-                if spec.required_real_max is not None and representable_max < spec.required_real_max - scale * 1.0e-6:
-                    raise RuntimeError("final qparams violate required_real_max")
+            spec = ConstrainedRangeSpec.from_mapping(root.detail[RANGE_POLICY_DETAIL_KEY])
+            observation = root.detail.get(RANGE_POLICY_OBSERVATION_KEY)
+            try:
+                if isinstance(observation, dict):
+                    final_metrics = evaluate_histogram_qparams(
+                        observation["histogram"],
+                        observation["observed_min"],
+                        observation["observed_max"],
+                        scale,
+                        zero_point,
+                        spec,
+                    ).to_dict()
+                else:
+                    final_metrics = validate_qparams_contract(scale, zero_point, spec)
+            except (KeyError, RangePolicyError) as exc:
+                raise RuntimeError(
+                    "final reconstructed qparams violate constrained policy for {}: {}".format(
+                        _stable_root_name(root, descriptors), exc
+                    )
+                ) from exc
             entry = {
                 "root": _stable_root_name(root, descriptors),
                 "policy_name": assignment["policy_name"],
                 "tensor_names": assignment["tensor_names"],
                 "observer_algorithm": root.observer_algorithm,
+                "initial_scale": initial_scale,
+                "initial_zero_point": initial_zero_point,
+                "final_scale": scale,
+                "final_zero_point": zero_point,
+                "scale_delta": scale - initial_scale,
+                "zero_point_delta": zero_point - initial_zero_point,
+                "selection_source": "observer-locked" if locked else "block-reconstruction",
                 "scale": scale,
                 "zero_point": zero_point,
                 "representable_min": representable_min,
                 "representable_max": representable_max,
-                "locked": bool(root.detail.get(RANGE_POLICY_LOCK_KEY, False)),
-                "result": result,
+                "locked": locked,
+                "initial_result": result,
+                "final_contract": final_metrics,
             }
             entries.append(entry)
 

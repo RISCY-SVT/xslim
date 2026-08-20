@@ -24,7 +24,11 @@ from ..ppq_decorator import (
     ppq_quant_param_computing_function,
     torch_KL_divergence,
 )
-from .local_policy import RANGE_POLICY_DETAIL_KEY, RANGE_POLICY_RESULT_KEY
+from .local_policy import (
+    RANGE_POLICY_DETAIL_KEY,
+    RANGE_POLICY_OBSERVATION_KEY,
+    RANGE_POLICY_RESULT_KEY,
+)
 
 
 class TorchXSlimObserver(BaseTensorObserver):
@@ -513,6 +517,11 @@ class TorchConstrainedRangeObserver(TorchXSlimObserver):
             spec=ConstrainedRangeSpec.from_mapping(raw_policy),
         )
         config.detail[RANGE_POLICY_RESULT_KEY] = result.to_dict()
+        config.detail[RANGE_POLICY_OBSERVATION_KEY] = {
+            "histogram": histogram.detach().cpu().numpy().astype(float).tolist(),
+            "observed_min": float(self._full_min_val),
+            "observed_max": float(self._full_max_val),
+        }
         logger.info(
             "constrained range {}: scale={} zero_point={} range=[{}, {}]".format(
                 self._watch_on.name,

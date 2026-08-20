@@ -14,6 +14,7 @@ from onnx import TensorProto, helper, numpy_helper
 from xslim.optimizer.local_policy import (
     LocalPolicyConflictError,
     build_policy_plan,
+    has_enabled_range_policy,
 )
 from xslim.xslim_pipeline import parse_xslim_config
 from xslim.xslim_pipeline import quantize_onnx_model
@@ -58,6 +59,30 @@ def test_nested_range_policy_and_manifest_path_parse_without_losing_types(tmp_pa
     assert custom.range_policy.objective == "constrained-mse"
     assert custom.range_policy.required_real_max == 4.0
     assert setting.quantization_parameters.range_policy_manifest_path.endswith("matched.json")
+
+
+def test_interval_and_final_constraint_fields_parse_without_losing_types():
+    policy = _policy(["tensor_a"])
+    policy["range_policy"].update(
+        {
+            "required_intervals": [
+                {"name": "silu_negative_trough", "real_min": -0.278, "real_max": 0.0, "minimum_codes": 3}
+            ],
+            "minimum_positive_codes": 16,
+            "minimum_negative_codes": 3,
+            "maximum_clipping_fraction": 0.01,
+            "maximum_rail_fraction": 0.02,
+            "lock_qparams": False,
+        }
+    )
+    custom = parse_xslim_config(_minimal_config([policy])).quantization_parameters.custom_setting[0]
+
+    assert custom.range_policy.required_intervals[0]["minimum_codes"] == 3
+    assert custom.range_policy.minimum_positive_codes == 16
+    assert custom.range_policy.minimum_negative_codes == 3
+    assert custom.range_policy.maximum_clipping_fraction == 0.01
+    assert custom.range_policy.maximum_rail_fraction == 0.02
+    assert custom.range_policy.lock_qparams is False
 
 
 def test_exact_selector_matches_only_requested_tensor_and_is_order_invariant():
@@ -118,6 +143,21 @@ def test_existing_custom_setting_fields_remain_available_without_range_policy():
     assert custom.max_percentile == 0.9995
 
 
+@pytest.mark.parametrize(
+    "legacy_setting",
+    [
+        {"tensor_names": ["tensor_a"], "calibration_type": "minmax"},
+        {"tensor_names": ["tensor_a"], "calibration_type": "kl"},
+        {"tensor_names": ["tensor_a"], "calibration_type": "mse"},
+        {"tensor_names": ["tensor_a"], "precision_level": 100},
+        {"tensor_names": ["missing"], "max_percentile": 0.999},
+    ],
+)
+def test_legacy_settings_do_not_enable_constrained_finalization(legacy_setting):
+    parsed = parse_xslim_config(_minimal_config([legacy_setting]))
+    assert has_enabled_range_policy(parsed.quantization_parameters.custom_setting) is False
+
+
 def test_policy_plan_manifest_is_json_stable():
     plan = build_policy_plan([_policy(["tensor_b", "tensor_a"], name="stable")], ["tensor_a", "tensor_b"])
     encoded = json.dumps([item.to_dict() for item in plan], sort_keys=True, separators=(",", ":"))
@@ -144,7 +184,8 @@ def _write_tiny_conv_model(path: Path) -> None:
     onnx.save(model, path)
 
 
-def test_selected_qparams_survive_fusion_blockwise_calibration_finetune_and_export(tmp_path):
+@pytest.mark.parametrize("lock_qparams", [True, False])
+def test_selected_qparams_survive_fusion_blockwise_calibration_finetune_and_export(tmp_path, lock_qparams):
     model_path = tmp_path / "tiny.onnx"
     calibration_path = tmp_path / "calibration.npy"
     list_path = tmp_path / "calibration.txt"
@@ -189,7 +230,7 @@ def test_selected_qparams_survive_fusion_blockwise_calibration_finetune_and_expo
                         "objective": "constrained-mse",
                         "required_real_min": -0.5,
                         "required_real_max": 4.0,
-                        "lock_qparams": True,
+                        "lock_qparams": lock_qparams,
                         "search_steps": 8,
                     },
                 }
@@ -199,11 +240,17 @@ def test_selected_qparams_survive_fusion_blockwise_calibration_finetune_and_expo
     quantize_onnx_model(config, output_path=str(output_path))
 
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-    assert manifest["phase"] == "post-calibration-final"
+    assert manifest["phase"] == "post-export-verified"
+    assert manifest["exported_qparams_equal"] is True
     assert len(manifest["final_qparams"]) == 1
     final = manifest["final_qparams"][0]
     assert final["tensor_names"] == ["terminal"]
-    assert final["locked"] is True
+    assert final["exported_equal"] is True
+    assert final["locked"] is lock_qparams
+    assert final["selection_source"] == ("observer-locked" if lock_qparams else "block-reconstruction")
+    if lock_qparams:
+        assert final["initial_scale"] == final["final_scale"]
+        assert final["initial_zero_point"] == final["final_zero_point"]
     assert final["representable_min"] <= -0.5
     assert final["representable_max"] >= 4.0
 

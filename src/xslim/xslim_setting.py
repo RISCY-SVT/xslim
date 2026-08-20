@@ -129,6 +129,11 @@ class ConstrainedRangePolicySetting(SettingSerialize):
         self.required_real_min: Optional[float] = None
         self.required_real_max: Optional[float] = None
         self.semantic_floor: Optional[Union[str, float]] = None
+        self.required_intervals: Sequence[Dict[str, object]] = []
+        self.minimum_positive_codes: int = 0
+        self.minimum_negative_codes: int = 0
+        self.maximum_clipping_fraction: Optional[float] = None
+        self.maximum_rail_fraction: Optional[float] = None
         self.percentile: float = 0.9999
         self.search_steps: int = 32
         self.scale_epsilon: float = 1.0e-12
@@ -149,6 +154,11 @@ class ConstrainedRangePolicySetting(SettingSerialize):
             required_real_min=self.required_real_min,
             required_real_max=self.required_real_max,
             semantic_floor=self.semantic_floor,
+            required_intervals=tuple(self.required_intervals),
+            minimum_positive_codes=self.minimum_positive_codes,
+            minimum_negative_codes=self.minimum_negative_codes,
+            maximum_clipping_fraction=self.maximum_clipping_fraction,
+            maximum_rail_fraction=self.maximum_rail_fraction,
             percentile=self.percentile,
             search_steps=self.search_steps,
             scale_epsilon=self.scale_epsilon,
@@ -167,6 +177,11 @@ class ConstrainedRangePolicySetting(SettingSerialize):
             "required_real_min": self.required_real_min,
             "required_real_max": self.required_real_max,
             "semantic_floor": self.semantic_floor,
+            "required_intervals": list(self.required_intervals),
+            "minimum_positive_codes": self.minimum_positive_codes,
+            "minimum_negative_codes": self.minimum_negative_codes,
+            "maximum_clipping_fraction": self.maximum_clipping_fraction,
+            "maximum_rail_fraction": self.maximum_rail_fraction,
             "percentile": self.percentile,
             "search_steps": self.search_steps,
             "scale_epsilon": self.scale_epsilon,
@@ -237,6 +252,11 @@ class QuantizationParameterSetting(SettingSerialize):
             logger.info("set higher precision level.")
         if self.finetune_level.value > AutoFinetuneLevel.LEVEL_1.value:
             logger.info("set higher finetune level.")
+        constrained = [
+            item for item in self.custom_setting or [] if item.range_policy.enabled
+        ]
+        if constrained and not self.range_policy_manifest_path:
+            raise ValueError("enabled range_policy requires range_policy_manifest_path")
 
 
 class CalibrationParameterSetting(SettingSerialize):

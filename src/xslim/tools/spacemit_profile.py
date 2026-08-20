@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+from collections import Counter
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Mapping, Optional, Sequence, Tuple
 
@@ -37,6 +38,11 @@ def _dtype_name(elem_type: int) -> str:
     return str(onnx.helper.tensor_dtype_to_np_dtype(elem_type).name)
 
 
+def _contract_dtype_name(value: object) -> str:
+    name = str(value).strip().lower()
+    return {"float": "float32", "double": "float64", "half": "float16"}.get(name, name)
+
+
 def _shape(value: onnx.ValueInfoProto) -> List[Optional[int]]:
     result: List[Optional[int]] = []
     for dim in value.type.tensor_type.shape.dim:
@@ -51,6 +57,48 @@ def _initializer_map(model: onnx.ModelProto) -> Dict[str, np.ndarray]:
     return {item.name: numpy_helper.to_array(item) for item in model.graph.initializer}
 
 
+def _validate_external_data(model_path: Path, model: onnx.ModelProto) -> List[Dict[str, Any]]:
+    records: List[Dict[str, Any]] = []
+    root = model_path.resolve().parent
+    for tensor in model.graph.initializer:
+        if tensor.data_location != TensorProto.EXTERNAL:
+            continue
+        metadata = {item.key: item.value for item in tensor.external_data}
+        location = metadata.get("location")
+        if not location:
+            raise ProfileValidationError(f"external initializer {tensor.name!r} has no location")
+        relative = Path(location)
+        if relative.is_absolute():
+            raise ProfileValidationError(f"external initializer {tensor.name!r} uses an absolute path")
+        resolved = (root / relative).resolve()
+        try:
+            resolved.relative_to(root)
+        except ValueError as exc:
+            raise ProfileValidationError(f"external initializer {tensor.name!r} escapes the model directory") from exc
+        if not resolved.is_file():
+            raise ProfileValidationError(f"external initializer data is missing: {resolved}")
+        try:
+            offset = int(metadata.get("offset", "0"))
+            length_value = metadata.get("length")
+            length = resolved.stat().st_size - offset if length_value is None else int(length_value)
+        except ValueError as exc:
+            raise ProfileValidationError(f"external initializer {tensor.name!r} has invalid offset/length") from exc
+        size = resolved.stat().st_size
+        if offset < 0 or length < 0 or offset + length > size:
+            raise ProfileValidationError(f"external initializer {tensor.name!r} exceeds external-data bounds")
+        records.append(
+            {
+                "tensor": tensor.name,
+                "location": relative.as_posix(),
+                "offset": offset,
+                "length": length,
+                "file_size": size,
+                "file_sha256": _sha256(resolved),
+            }
+        )
+    return records
+
+
 def _producer_map(model: onnx.ModelProto) -> Dict[str, onnx.NodeProto]:
     return {output: node for node in model.graph.node for output in node.output if output}
 
@@ -61,6 +109,41 @@ def _consumer_map(model: onnx.ModelProto) -> Dict[str, List[Tuple[onnx.NodeProto
         for index, name in enumerate(node.input):
             result.setdefault(name, []).append((node, index))
     return result
+
+
+def _value_types(model: onnx.ModelProto) -> Dict[str, int]:
+    result = {item.name: int(item.data_type) for item in model.graph.initializer}
+    for value in list(model.graph.input) + list(model.graph.output) + list(model.graph.value_info):
+        if value.type.HasField("tensor_type"):
+            result[value.name] = int(value.type.tensor_type.elem_type)
+    return result
+
+
+def _trace_matmul_input_to_dq(name: str, producers: Mapping[str, onnx.NodeProto]) -> onnx.NodeProto:
+    passthrough = {"Flatten", "Identity", "Reshape", "Squeeze", "Transpose", "Unsqueeze"}
+    seen = set()
+    current = name
+    while current not in seen:
+        seen.add(current)
+        producer = producers.get(current)
+        if producer is None:
+            break
+        if producer.op_type == "DequantizeLinear":
+            return producer
+        if producer.op_type not in passthrough or not producer.input:
+            break
+        current = producer.input[0]
+    raise ProfileValidationError(f"MatMul input {name!r} is not supplied by a traceable signed DQ domain")
+
+
+def _graph_census(model: onnx.ModelProto) -> Dict[str, Any]:
+    op_counts = Counter(node.op_type for node in model.graph.node)
+    return {
+        "node_count": len(model.graph.node),
+        "op_counts": dict(sorted(op_counts.items())),
+        "quantize_linear_count": op_counts["QuantizeLinear"],
+        "dequantize_linear_count": op_counts["DequantizeLinear"],
+    }
 
 
 def _check_output_contract(model: onnx.ModelProto, contract: Sequence[Mapping[str, Any]]) -> List[Dict[str, Any]]:
@@ -81,7 +164,7 @@ def _check_output_contract(model: onnx.ModelProto, contract: Sequence[Mapping[st
         {
             "name": str(item["name"]),
             "shape": [None if value is None else int(value) for value in item["shape"]],
-            "dtype": str(item.get("dtype", "float32")),
+            "dtype": _contract_dtype_name(item.get("dtype", "float32")),
         }
         for item in contract
     ]
@@ -100,11 +183,26 @@ def validate_profile(
     *,
     tail_path: Optional[Path] = None,
     expected_tail_sha256: Optional[str] = None,
+    reference_model_path: Optional[Path] = None,
 ) -> Dict[str, Any]:
     """Validate graph structure without making any provider-placement claim."""
 
     model_path = Path(model_path)
+    raw_model = onnx.load(model_path, load_external_data=False)
+    external_data = _validate_external_data(model_path, raw_model)
     model = onnx.load(model_path, load_external_data=True)
+    custom_nodes = [
+        node.name or node.op_type
+        for node in model.graph.node
+        if node.domain not in {"", "ai.onnx"}
+    ]
+    custom_functions = [f"{function.domain}::{function.name}" for function in model.functions]
+    custom_opsets = [item.domain for item in model.opset_import if item.domain not in {"", "ai.onnx"}]
+    if custom_nodes or custom_functions or custom_opsets:
+        raise ProfileValidationError(
+            "unexpected custom domains/operators: "
+            + ", ".join(sorted(set(custom_nodes + custom_functions + custom_opsets)))
+        )
     try:
         onnx.checker.check_model(model)
     except Exception as exc:
@@ -144,6 +242,10 @@ def validate_profile(
             non_initializer_qparams.append(node.name or node.output[0])
             continue
         scale = np.asarray(initializers[node.input[1]])
+        if not np.issubdtype(scale.dtype, np.floating) or not np.all(np.isfinite(scale)) or np.any(scale <= 0):
+            raise ProfileValidationError(
+                f"Q/DQ scale for {node.name or node.output[0]!r} must be static, finite, and positive"
+            )
         if len(node.input) < 3 or not node.input[2]:
             implicit_uint8.append(node.name or node.output[0])
             continue
@@ -184,6 +286,23 @@ def validate_profile(
             "Q/DQ scale and zero point must be static initializers: " + ", ".join(sorted(non_initializer_qparams))
         )
 
+    matmul_nodes = [node for node in model.graph.node if node.op_type == "MatMul"]
+    matmul_sites: List[Dict[str, Any]] = []
+    for matmul in matmul_nodes:
+        if len(matmul.input) != 2:
+            raise ProfileValidationError(f"MatMul {matmul.name!r} must have exactly two inputs")
+        dq_names = []
+        for input_name in matmul.input:
+            dq = _trace_matmul_input_to_dq(input_name, producers)
+            if len(dq.input) < 3 or dq.input[1] not in initializers or dq.input[2] not in initializers:
+                raise ProfileValidationError(f"MatMul {matmul.name!r} has dynamic qparams")
+            scale = np.asarray(initializers[dq.input[1]])
+            zero_point = np.asarray(initializers[dq.input[2]])
+            if scale.size != 1 or zero_point.size != 1 or zero_point.dtype != np.int8:
+                raise ProfileValidationError(f"MatMul {matmul.name!r} input is not signed per-tensor QDQ")
+            dq_names.append(dq.name or dq.output[0])
+        matmul_sites.append({"node": matmul.name, "input_dq": dq_names})
+
     kernel_valid = 0
     for conv in conv_nodes:
         attributes = _attributes(conv)
@@ -198,9 +317,23 @@ def validate_profile(
             raise ProfileValidationError(f"Conv {conv.name!r} kernel_shape does not match weight shape")
         kernel_valid += 1
 
-    fp16_initializers = [item.name for item in model.graph.initializer if item.data_type == TensorProto.FLOAT16]
-    if fp16_initializers:
-        raise ProfileValidationError("FP16 initializers are forbidden by the all-S8 profile")
+    inferred = onnx.shape_inference.infer_shapes(model)
+    value_types = _value_types(inferred)
+    fp16_values = sorted(name for name, value_type in value_types.items() if value_type == TensorProto.FLOAT16)
+    fp16_casts = []
+    for node in model.graph.node:
+        if node.op_type != "Cast":
+            continue
+        attributes = _attributes(node)
+        if attributes.get("to") == TensorProto.FLOAT16 or any(
+            value_types.get(name) == TensorProto.FLOAT16 for name in list(node.input) + list(node.output)
+        ):
+            fp16_casts.append(node.name or node.output[0])
+    if fp16_values or fp16_casts:
+        raise ProfileValidationError(
+            "FP16 values/Casts are forbidden by the all-S8 profile: "
+            + ", ".join(sorted(set(fp16_values + fp16_casts)))
+        )
 
     outputs = _check_output_contract(model, output_contract)
     tail_identity = None
@@ -216,6 +349,20 @@ def validate_profile(
     elif expected_tail_sha256 is not None:
         raise ProfileValidationError("expected tail SHA-256 was supplied without a tail file")
 
+    census = _graph_census(model)
+    reference_identity = None
+    if reference_model_path is not None:
+        reference_model_path = Path(reference_model_path)
+        reference = onnx.load(reference_model_path, load_external_data=True)
+        reference_census = _graph_census(reference)
+        if census != reference_census:
+            raise ProfileValidationError(
+                "graph census differs from reference: expected {} observed {}".format(
+                    json.dumps(reference_census, sort_keys=True), json.dumps(census, sort_keys=True)
+                )
+            )
+        reference_identity = _sha256(reference_model_path)
+
     return {
         "profile": PROFILE_NAME,
         "passed": True,
@@ -227,7 +374,12 @@ def validate_profile(
         "activation_per_tensor_sites": len(activation_sites),
         "conv_weight_per_channel_sites": len(weight_sites),
         "conv_kernel_shape": {"total": len(conv_nodes), "valid": kernel_valid},
-        "fp16_initializer_count": 0,
+        "fp16_value_or_cast_count": 0,
+        "matmul_qdq_sites": matmul_sites,
+        "custom_domain_count": 0,
+        "external_data": external_data,
+        "graph_census": census,
+        "reference_model_sha256": reference_identity,
         "outputs": outputs,
         "tail_sha256": tail_identity,
         "structural_risk": (
@@ -242,6 +394,7 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--output-contract", required=True, type=Path)
     parser.add_argument("--tail", type=Path)
     parser.add_argument("--tail-sha256")
+    parser.add_argument("--reference-model", type=Path)
     parser.add_argument("--report", required=True, type=Path)
     return parser
 
@@ -258,6 +411,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             contract,
             tail_path=args.tail,
             expected_tail_sha256=args.tail_sha256,
+            reference_model_path=args.reference_model,
         )
     except Exception as exc:
         report = {"profile": PROFILE_NAME, "passed": False, "error": str(exc)}

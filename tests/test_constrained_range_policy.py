@@ -12,8 +12,11 @@ from onnx import TensorProto, helper, numpy_helper
 from xslim.range_policy import (
     ConstrainedRangeSpec,
     RangePolicyError,
+    _compress_values,
+    _kl_loss,
     quantize_dequantize,
     select_qparams,
+    validate_qparams_contract,
 )
 
 
@@ -132,3 +135,71 @@ def test_infeasible_or_invalid_constraints_fail_closed():
         )
     with pytest.raises(RangePolicyError, match="finite"):
         select_qparams(values, ConstrainedRangeSpec(required_real_max=float("inf")))
+
+
+def test_required_interval_and_signed_code_budgets_are_enforced():
+    spec = ConstrainedRangeSpec.from_mapping(
+        {
+            "required_intervals": [
+                {
+                    "name": "silu_negative_trough",
+                    "real_min": -0.2784645427610738,
+                    "real_max": 0.0,
+                    "minimum_codes": 3,
+                }
+            ],
+            "minimum_positive_codes": 16,
+            "minimum_negative_codes": 3,
+        }
+    )
+    result = select_qparams(np.linspace(-0.25, 4.0, 4096), spec)
+    contract = validate_qparams_contract(
+        result.scale,
+        result.zero_point,
+        spec,
+        clipping_fraction=result.clipping_fraction,
+        rail_fraction=result.rail_fraction,
+    )
+
+    assert contract["interval_code_counts"]["silu_negative_trough"] >= 3
+    assert contract["positive_codes"] >= 16
+    assert contract["negative_codes"] >= 3
+
+
+def test_final_clipping_and_rail_limits_fail_closed():
+    spec = ConstrainedRangeSpec(maximum_clipping_fraction=0.01, maximum_rail_fraction=0.02)
+    with pytest.raises(RangePolicyError, match="maximum_clipping_fraction"):
+        validate_qparams_contract(0.1, 0, spec, clipping_fraction=0.02, rail_fraction=0.0)
+    with pytest.raises(RangePolicyError, match="maximum_rail_fraction"):
+        validate_qparams_contract(0.1, 0, spec, clipping_fraction=0.0, rail_fraction=0.03)
+    with pytest.raises(RangePolicyError, match="observation metrics"):
+        validate_qparams_contract(0.1, 0, spec)
+
+
+def test_small_array_distribution_preserves_multiplicity_and_order_invariance():
+    first_points, first_weights = _compress_values(np.asarray([1.0, 0.0, 0.0, 0.0]))
+    second_points, second_weights = _compress_values(np.asarray([0.0, 1.0, 0.0, 0.0]))
+
+    np.testing.assert_array_equal(first_points, np.asarray([0.0, 1.0]))
+    np.testing.assert_array_equal(first_weights, np.asarray([3.0, 1.0]))
+    np.testing.assert_array_equal(first_points, second_points)
+    np.testing.assert_array_equal(first_weights, second_weights)
+
+    uniform_loss = _kl_loss(np.asarray([0, 0]), np.asarray([0.5, 0.5]))
+    multiplicity_loss = _kl_loss(np.asarray([0, 0]), np.asarray([0.75, 0.25]))
+    assert uniform_loss == pytest.approx(0.0)
+    assert multiplicity_loss > uniform_loss
+
+
+def test_required_interval_rejects_infeasible_code_resolution():
+    spec = ConstrainedRangeSpec.from_mapping(
+        {
+            "required_real_min": -100.0,
+            "required_real_max": 100.0,
+            "required_intervals": [
+                {"name": "tiny", "real_min": -0.01, "real_max": 0.0, "minimum_codes": 3}
+            ],
+        }
+    )
+    with pytest.raises(RangePolicyError, match="no legal signed INT8"):
+        select_qparams(np.asarray([-100.0, 0.0, 100.0]), spec)

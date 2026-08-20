@@ -19,7 +19,7 @@ from .analyse import statistical_analyse
 from .defs import XQUANT_CONFIG
 from .onnx_graph_helper import (format_onnx_model, is_large_model,
                                 merge_onnx_model, truncate_onnx_model)
-from .optimizer import GraphLegalized
+from .optimizer import GraphLegalized, has_enabled_range_policy, verify_exported_qparams
 from .ppq_decorator import (DISPATCHER_TABLE, BaseGraph, GraphDispatcher,
                             OnnxParser, ONNXRUNTIMExporter, TargetPlatform,
                             TorchExecutor)
@@ -276,6 +276,12 @@ def quantize_onnx_model(
             # Check if function already exists to avoid duplicates
             if not any(f.domain == function_proto.domain and f.name == function_proto.name for f in quant_onnx_model.functions):
                 quant_onnx_model.functions.append(function_proto)
+
+        if has_enabled_range_policy(config_setting.quantization_parameters.custom_setting):
+            verify_exported_qparams(
+                quant_onnx_model,
+                config_setting.quantization_parameters.range_policy_manifest_path,
+            )
 
     quant_onnx_model.metadata_props.extend(ori_onnx_model.metadata_props)
     quant_onnx_model.ir_version = max(9, ori_onnx_model.ir_version)
