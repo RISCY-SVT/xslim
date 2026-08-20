@@ -2,9 +2,10 @@
 # Copyright (c) 2023 SpacemiT. All rights reserved.
 # Modified by RISCY-SVT in 2026: keep explicitly constrained activation qparams immutable during LSQ.
 import functools
+import hashlib
 import random
 from collections import defaultdict
-from typing import Callable, Dict, Iterable, List, Sequence, Set, Tuple, Union
+from typing import Any, Callable, Dict, Iterable, List, Sequence, Set, Tuple, Union
 
 import numpy as np
 import torch
@@ -299,6 +300,41 @@ class LSQDelegatorDecorator(LSQDelegator):
 
 
 class LearnedStepSizePassDecorator(LearnedStepSizePass):
+    def __init__(self, *args: Any, seed: int | None = None, **kwargs: Any) -> None:
+        super().__init__(*args, **kwargs)
+        self.seed = None if seed is None else int(seed)
+        self._local_rng = random.Random()
+        if self.seed is None:
+            # Preserve legacy ordering after earlier seeded passes have consumed
+            # process RNG state, while keeping block tuning off the global RNG.
+            self._local_rng.setstate(random.getstate())
+            self.seed_source = "inherited-process-state"
+        else:
+            self._local_rng.seed(self.seed)
+            self.seed_source = "explicit"
+        self.sample_order_manifest: Dict[str, Dict[str, Union[int, str]]] = {}
+
+    def _sample_order(self, block: XSlimTrainableBlock, steps: int) -> List[int]:
+        block_name = "|".join(operation.name for operation in block.rps)
+        if self.seed is None:
+            rng = self._local_rng
+            seed_payload = repr(rng.getstate()).encode("ascii")
+        else:
+            seed_payload = "xslim-lsq-block-v1\0{}\0{}".format(self.seed, block_name).encode("utf-8")
+            rng = random.Random(int.from_bytes(hashlib.sha256(seed_payload).digest()[:8], "little"))
+        derived_seed = int.from_bytes(hashlib.sha256(seed_payload).digest()[:8], "little")
+        order = list(range(steps))
+        rng.shuffle(order)
+        order_bytes = np.asarray(order, dtype="<u8").tobytes()
+        self.sample_order_manifest[block_name] = {
+            "global_seed": self.seed if self.seed is not None else "inherited",
+            "seed_source": self.seed_source,
+            "derived_seed": derived_seed,
+            "steps": steps,
+            "sample_order_sha256": hashlib.sha256(order_bytes).hexdigest(),
+        }
+        return order
+
     def collect(
         self,
         graph: BaseGraph,
@@ -457,8 +493,7 @@ class LearnedStepSizePassDecorator(LearnedStepSizePass):
         if dataset_length == 0:
             raise ValueError("Dataset is empty.")
 
-        range_steps = [i for i in range(steps)]
-        random.shuffle(range_steps)
+        range_steps = self._sample_order(block, steps)
         for idx in tqdm(range_steps, desc="Block Tuning"):
             qt_input, fp_output = qt_inputs[idx % dataset_length], fp_outputs[idx % dataset_length]
 
