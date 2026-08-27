@@ -42,10 +42,10 @@ dynamic = ["version", "dependencies"]
 [project.urls]
 Homepage = "https://github.com/RISCY-SVT/xslim"
 Repository = "https://github.com/RISCY-SVT/xslim"
-Documentation = "https://github.com/RISCY-SVT/xslim/tree/v2.1.2-riscy.1/doc"
+Documentation = "https://github.com/RISCY-SVT/xslim/tree/v2.1.2-riscy.2/docs"
 Issues = "https://github.com/RISCY-SVT/xslim/issues"
 Upstream = "https://github.com/spacemit-com/xslim"
-"Release Notes" = "https://github.com/RISCY-SVT/xslim/releases/tag/v2.1.2-riscy.1"
+"Release Notes" = "https://github.com/RISCY-SVT/xslim/releases/tag/v2.1.2-riscy.2"
 
 [project.scripts]
 xslim = "xslim.__main__:main"

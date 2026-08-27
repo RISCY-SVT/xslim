@@ -1,4 +1,4 @@
-XSlim 2.1.2+riscy.1
+XSlim 2.1.2+riscy.2
 
 Unofficial RISCY-SVT build based on spacemit-com/xslim commit
 9a33f2f770d00fd02ff8bc0f1907135e9bf47f8c.
@@ -7,13 +7,13 @@ This build is not endorsed by SpacemiT. The upstream-authored two-input
 ReduceMax repair remains attributed to upstream. RISCY-SVT additions are
 listed in MODIFICATIONS.md.
 
-The six-output YOLO26 sample separates the Stage64-validated reproduction
-configuration from an unvalidated vendor accuracy-tuning starting point. The
-fork's inherited PyPI workflow is guarded against downstream execution.
+The six-output YOLO26 sample separates a reproducible baseline configuration
+from an accuracy-tuning starting point. The fork's inherited PyPI workflow is
+guarded against downstream execution.
 
 This notice is informational and does not modify the Apache License 2.0.
 
-Unreleased downstream development after v2.1.2-riscy.1 is identified by the
-PEP 440 version 2.1.2+riscy.2.dev1. It adds opt-in constrained signed-INT8
-range selection and structural profile auditing. It is not a published
-release and does not establish runtime placement or performance.
+Release `v2.1.2-riscy.2` adds opt-in constrained signed-INT8 range selection,
+deterministic layer-local adaptive-rounding infrastructure, and structural
+profile auditing. A structural profile pass does not establish runtime
+placement, accuracy, latency, stability, or production suitability.

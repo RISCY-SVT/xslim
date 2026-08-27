@@ -1,10 +1,10 @@
-# XSlim 2.1.2+riscy.2.dev2
+# XSlim 2.1.2+riscy.2
 
-This is an unreleased RISCY-SVT development line based on upstream commit
+This RISCY-SVT downstream release is based on upstream commit
 `9a33f2f770d00fd02ff8bc0f1907135e9bf47f8c`. It does not modify or supersede
 the published `v2.1.2-riscy.1` tag.
 
-The development line adds an opt-in, model-independent constrained asymmetric
+The release adds an opt-in, model-independent constrained asymmetric
 INT8 observer, deterministic exact-tensor selectors, post-fusion policy
 binding, honest locked/unlocked qparam finalization, deterministic adaptive
 weight rounding, held-out block reconstruction, bias correction, and a

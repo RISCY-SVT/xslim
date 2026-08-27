@@ -17,8 +17,8 @@ def test_upstream_provenance_constants_are_exact():
     assert UPSTREAM_TREE in upstream
     assert "05d2c842fb4407bed80fb688c533e43079850dd1" not in upstream
     assert f"`{UPSTREAM_VERSION}`" in upstream
-    assert (ROOT / "VERSION_NUMBER").read_text().strip() == "2.1.2+riscy.2.dev2"
-    assert "v2.1.2-riscy.1" in (ROOT / "RELEASE_NOTES.md").read_text(encoding="utf-8")
+    assert (ROOT / "VERSION_NUMBER").read_text().strip() == "2.1.2+riscy.2"
+    assert "v2.1.2-riscy.2" in (ROOT / "RELEASE_NOTES.md").read_text(encoding="utf-8")
 
 
 def test_downstream_publish_workflow_is_fail_closed():

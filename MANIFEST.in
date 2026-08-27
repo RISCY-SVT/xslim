@@ -1,17 +1,26 @@
 # Modified by RISCY-SVT in 2026: include fork provenance and notice files.
 include LICENSE
 include LICENSE_AUDIT.md
+include CHANGELOG.md
+include CONTRIBUTING.md
+include DEVELOPMENT_NOTES.md
+include INSTALL.md
 include MODIFICATIONS.md
 include NOTICE-RISCY-SVT
+include QUICKSTART.md
 include README.md
 include README_zh.md
 include RELEASE_NOTES.md
+include SECURITY.md
+include SUPPORT.md
 include THIRD_PARTY_NOTICES.md
 include THIRD_PARTY_LICENSES.tsv
 include UPSTREAM.md
 include VERSION_NUMBER
 include requirements.txt
 graft doc
+graft docs
 graft samples
+prune samples/bert_quant_dataset
 global-exclude *.py[cod]
 prune **/__pycache__

@@ -12,7 +12,7 @@ additions; no ownership claim is made over upstream work.
 | `MANIFEST.in` | Include derivative provenance and notice files in source distributions. |
 | `README.md` | Identify the unofficial derivative and link provenance. |
 | `README_zh.md` | Identify the unofficial derivative and link provenance. |
-| `VERSION_NUMBER` | Advance the downstream branch to unreleased PEP 440 version `2.1.2+riscy.2.dev2`; published tag `v2.1.2-riscy.1` remains immutable. |
+| `VERSION_NUMBER` | Identify downstream release `2.1.2+riscy.2`; published tag `v2.1.2-riscy.1` remains immutable. |
 | `pyproject.toml` | Add fork URLs, upstream attribution, downstream maintainer metadata, opt-in audit/profile CLIs, and source-layout pytest configuration. |
 | `src/xslim/optimizer/__init__.py` | Export the downstream local constrained-range passes and observer. |
 | `src/xslim/optimizer/observer.py` | Add deterministic constrained asymmetric signed-INT8 histogram observation. |
@@ -26,7 +26,7 @@ additions; no ownership claim is made over upstream work.
 
 Each text/code file above carries a prominent RISCY-SVT modification notice,
 except `VERSION_NUMBER`, whose parser requires a single PEP 440 version line.
-Its `+riscy.1` suffix is the prominent modification identification.
+Its `+riscy.2` suffix is the prominent modification identification.
 
 ## Added files
 
@@ -43,7 +43,7 @@ Its `+riscy.1` suffix is the prominent modification identification.
   held-out block reconstruction, validation rollback, and bias correction.
 - A structural `spacemit_k1x_s8_qdq_split_v1` profile validator; it does not
   make provider-placement or performance claims.
-- Development documentation and schema in `DEVELOPMENT_NOTES.md`,
+- Human documentation, development notes, and schema in `DEVELOPMENT_NOTES.md`,
   `doc/constrained_range_policy.md`, and
   `doc/constrained_range_policy.schema.json`.
 - Two explicitly separated sanitized K1X/YOLO26 six-output split configs under
@@ -60,5 +60,5 @@ Its `+riscy.1` suffix is the prominent modification identification.
 - No unconditional model-specific rule was added to XSlim quantization.
 - No YoloDecode matcher change was selected for this release.
 - The tagged release source contains no Stage evidence or raw lab artifacts.
-- The published `v2.1.2-riscy.1` tag and package remain unchanged; current
-  branch work uses the unreleased `2.1.2+riscy.2.dev2` development version.
+- The published `v2.1.2-riscy.1` tag and package remain unchanged. This source
+  prepares the separate `v2.1.2-riscy.2` downstream release.

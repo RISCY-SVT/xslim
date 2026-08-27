@@ -1,56 +1,56 @@
-# XSlim 2.1.2+riscy.1
+# XSlim 2.1.2+riscy.2
 
-Unofficial RISCY-SVT K1X/YOLO hardening build. This release is not endorsed by
-SpacemiT and is not published to PyPI.
+Unofficial RISCY-SVT downstream release for reproducible ONNX PTQ and K1X
+SpaceMIT signed-S8 Q/DQ validation. It is not endorsed by SpacemiT and is not
+published to PyPI.
 
-## Source
+## Identity
 
+- Tag: `v2.1.2-riscy.2`
+- Package: `2.1.2+riscy.2`
 - Upstream: <https://github.com/spacemit-com/xslim>
-- Exact base commit: `9a33f2f770d00fd02ff8bc0f1907135e9bf47f8c`
-- Exact base tree: `05d2c8425ab8587abf401fa5976a08d008fdd719`
-- Upstream version at that base: `2.1.2`
-- Fork tag: `v2.1.2-riscy.1`
-- Python package version: `2.1.2+riscy.1`
+- Upstream base commit: `9a33f2f770d00fd02ff8bc0f1907135e9bf47f8c`
+- Upstream base tree: `05d2c8425ab8587abf401fa5976a08d008fdd719`
 
-The two-input `ReduceMax` parsing repair is upstream-authored and was already
-present at the base commit. RISCY-SVT adds regression coverage and one bounded
-empty-reduction identity correction exposed by those tests.
+## Added downstream capabilities
 
-## RISCY-SVT additions
+- Deterministic, fail-closed exact-tensor and bounded-subgraph local policies.
+- Constrained asymmetric signed-INT8 range search with explicit representable
+  intervals, code budgets, clipping limits, and exported-qparam verification.
+- Honest `lock_qparams=true/false` behavior through reconstruction.
+- Deterministic stratified activation sampling and small-array histogram KL.
+- BRECQ-inspired layer-local adaptive rounding infrastructure with held-out
+  validation, best-checkpoint restore, rollback, and optional bias correction.
+- Structural validator for the `spacemit_k1x_s8_qdq_split_v1` profile.
+- Optional YOLO output and Q/DQ boundary audit commands.
+- Human installation, configuration, reconstruction, K1X profile, YOLO26,
+  troubleshooting, validation, provenance, and Russian quick-start guides.
 
-- Expanded `ReduceMax` semantic coverage across opsets, axes, keepdims, noop,
-  empty tensors, and Conv-to-ReduceMax behavior.
-- Optional `xslim-yolo-output-check` detector-output semantic checker.
-- Optional `xslim-qdq-boundary-audit` range and saturation auditor.
-- Sanitized K1X/YOLO26 six-output split examples with exact letterboxing.
-- Apache-2.0 provenance, modifications, and third-party inventories.
+## Validated scope and limits
 
-## YOLO26 configuration status
+The validated downstream YOLO campaign used seven layer-local single-Conv
+targets. Full BRECQ building-block reconstruction, residual/C2f
+reconstruction, whole-head reconstruction, QDrop, task-loss reconstruction,
+and QAT are not validated.
 
-`config_stage64_repro.json` records the exact Stage64 policy that passed the
-bounded host and K1X checks: `precision_level=0`, `finetune_level=1`, and 50
-calibration images with project-exact preprocessing.
+XSlim includes YoloDecode source support, but the frozen validated YOLO26
+graphs use six ordered bbox/confidence outputs followed by an exact float CPU
+tail. A historical direct-E2E route collapsed scores on 100/100 images. The
+current recommendation is the split contract, not direct E2E.
 
-`config_accuracy_starting_point.json` records current vendor tuning guidance:
-`precision_level=1`, `finetune_level=2`, and an independent corpus of at least
-500 images. That configuration has not passed K1X board or COCO validation in
-this release.
+Passing the structural SpaceMIT profile does not prove provider placement,
+kernel selection, numerical equivalence, accuracy, latency, stability, or
+production suitability. Generated models require separate host and target
+validation.
 
-## Known limitation
+The sanitized `config_stage64_repro.json` remains a reproducibility reference.
+`config_accuracy_starting_point.json` remains guidance and has not passed K1X board or COCO validation as a standalone released configuration.
 
-The Stage64 private YOLO26 direct-E2E diagnostic did not match the current
-YoloDecode fusion and produced collapsed score channels after quantization.
-This release does not claim that direct-E2E route is fixed. The six-output
-split remains the validated workflow: bbox/confidence branches remain
-separate, only the inference partition is quantized, and post-processing
-remains float.
+## Distribution boundary
 
-## Distribution scope
+Release assets contain source, documentation, wheel, sdist, SPDX SBOM,
+manifest, and checksums. They contain no ONNX model, weight, prediction,
+dataset, SpaceMIT runtime, vendor binary, credential, or private lab path.
 
-No model, trained weight, calibration image, COCO image, SpacemiT ONNX Runtime,
-or other vendor binary is bundled. The release payload contains source, wheel,
-sdist, SBOM, checksums, reproducibility constraints, and manifests. The
-inherited upstream PyPI workflow is guarded so it can run only in
-`spacemit-com/xslim`. Publication of this fork additionally requires GitHub
-Actions to be disabled and verified through the repository API before a
-release is created.
+The inherited upstream PyPI workflow is fail-closed on this fork. This release
+is published only as GitHub and GitLab release assets.

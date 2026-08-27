@@ -61,7 +61,7 @@ class TestPackagingStandards(unittest.TestCase):
         self.assertEqual(
             project["urls"]["Upstream"], "https://github.com/spacemit-com/xslim"
         )
-        self.assertIn("v2.1.2-riscy.1", project["urls"]["Documentation"])
+        self.assertIn("v2.1.2-riscy.2", project["urls"]["Documentation"])
         self.assertEqual(
             project["scripts"]["xslim-yolo-output-check"],
             "xslim.tools.yolo_output_check:main",
@@ -95,7 +95,9 @@ class TestPackagingStandards(unittest.TestCase):
         self.assertIn('include README.md', manifest_text)
         self.assertIn('include README_zh.md', manifest_text)
         self.assertIn('graft doc', manifest_text)
+        self.assertIn('graft docs', manifest_text)
         self.assertIn('graft samples', manifest_text)
+        self.assertIn('prune samples/bert_quant_dataset', manifest_text)
 
     def test_readmes_document_standard_install_and_cli(self):
         for readme_path in README_PATHS:
@@ -125,6 +127,16 @@ class TestPackagingStandards(unittest.TestCase):
         self.assertIn('--config', help_text)
         self.assertIn('--input_path', help_text)
         self.assertIn('--output_path', help_text)
+
+    def test_cli_version_reports_release_identity(self):
+        main_module = _load_main_module()
+        stdout = io.StringIO()
+        with self.assertRaises(SystemExit) as exit_context:
+            with redirect_stdout(stdout):
+                main_module.main(["--version"])
+
+        self.assertEqual(exit_context.exception.code, 0)
+        self.assertEqual(stdout.getvalue().strip(), "xslim 2.1.2+riscy.2")
 
 
 if __name__ == '__main__':
