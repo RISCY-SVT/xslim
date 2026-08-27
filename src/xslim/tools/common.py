@@ -6,7 +6,7 @@ import hashlib
 import importlib.util
 from pathlib import Path
 from types import ModuleType
-from typing import Any, Callable, Dict, Iterable, List, Tuple
+from typing import Any, Callable, Dict, Iterable, List, Tuple, cast
 
 import numpy as np
 
@@ -65,7 +65,7 @@ def load_preprocess(specification: str) -> Callable[[Path], Any]:
         raise TypeError(
             f"preprocess attribute is not callable: {specification}"
         )
-    return function
+    return cast(Callable[[Path], Any], function)
 
 
 def make_feed(

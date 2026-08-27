@@ -10,11 +10,11 @@ import math
 from collections import Counter
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple
+from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple, cast
 
 import numpy as np
 import onnx
-import onnxruntime as ort
+import onnxruntime as ort  # type: ignore[import-untyped]
 from onnx import TensorProto, helper, numpy_helper
 
 from .common import (
@@ -54,7 +54,7 @@ class Accumulator:
     dequant_square_sum: float = 0.0
     reference_min: float = math.inf
     reference_max: float = -math.inf
-    histogram: Counter = field(default_factory=Counter)
+    histogram: Counter[int] = field(default_factory=Counter)
     image_hashes: List[Dict[str, str]] = field(default_factory=list)
 
 
@@ -188,10 +188,12 @@ def _session(model: onnx.ModelProto) -> ort.InferenceSession:
     )
 
 
-def _broadcast(parameter: np.ndarray, shape: Tuple[int, ...], axis: Optional[int]):
+def _broadcast(
+    parameter: np.ndarray, shape: Tuple[int, ...], axis: Optional[int]
+) -> np.ndarray:
     value = np.asarray(parameter)
     if value.size == 1:
-        return value.reshape(()).astype(np.float64)
+        return cast(np.ndarray, value.reshape(()).astype(np.float64))
     if axis is None:
         raise ValueError("multi-value Q/DQ parameter has no axis")
     resolved_axis = axis if axis >= 0 else len(shape) + axis
@@ -204,7 +206,7 @@ def _broadcast(parameter: np.ndarray, shape: Tuple[int, ...], axis: Optional[int
         )
     broadcast_shape = [1] * len(shape)
     broadcast_shape[resolved_axis] = value.size
-    return value.reshape(broadcast_shape).astype(np.float64)
+    return cast(np.ndarray, value.reshape(broadcast_shape).astype(np.float64))
 
 
 def update_accumulator(

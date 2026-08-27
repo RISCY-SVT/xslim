@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+set -euo pipefail
+
 python -m xslim -c resnet18.json
 python -m xslim -c mobilenet_v3_small.json
 python -m xslim -c resnet18_custom_preprocess.json

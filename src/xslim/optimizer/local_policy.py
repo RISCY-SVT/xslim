@@ -8,7 +8,7 @@ import hashlib
 import math
 from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Any, Dict, Iterable, List, Mapping, Optional, Sequence, Set, Tuple
+from typing import Any, Dict, Iterable, List, Mapping, Optional, Sequence, Set, Tuple, cast
 
 import torch
 
@@ -73,7 +73,7 @@ def _range_mapping(setting: Any) -> Dict[str, Any]:
     return dict(value.__dict__)
 
 
-def _setting_value(setting: Any, name: str, default=None):
+def _setting_value(setting: Any, name: str, default: Any = None) -> Any:
     return setting.get(name, default) if isinstance(setting, Mapping) else getattr(setting, name, default)
 
 
@@ -315,7 +315,7 @@ def verify_exported_qparams(model: Any, manifest_path: Optional[str]) -> None:
     _write_manifest(manifest_path, manifest)
 
 
-class LocalPolicyRebindPass(QuantizationOptimizationPass):
+class LocalPolicyRebindPass(QuantizationOptimizationPass):  # type: ignore[misc]
     """Bind local settings to final post-fusion quantization roots."""
 
     def __init__(self, custom_setting: Sequence[Any], manifest_path: Optional[str] = None) -> None:
@@ -323,8 +323,8 @@ class LocalPolicyRebindPass(QuantizationOptimizationPass):
         self._custom_setting = custom_setting or []
         self._manifest_path = manifest_path
 
-    @empty_ppq_cache
-    def optimize(self, graph: BaseGraph, **kwargs) -> None:
+    @empty_ppq_cache  # type: ignore[untyped-decorator]
+    def optimize(self, graph: BaseGraph, **kwargs: Any) -> None:
         by_variable, descriptors = _config_records(graph)
         root_assignments: Dict[int, Dict[str, Any]] = {}
         roots: Dict[int, TensorQuantizationConfig] = {}
@@ -412,14 +412,14 @@ class LocalPolicyRebindPass(QuantizationOptimizationPass):
         for root_id in sorted(root_assignments, key=lambda item: _stable_root_name(roots[item], descriptors)):
             root = roots[root_id]
             assignment = root_assignments[root_id]
-            local_policy = assignment["policy"]
-            calibration_type = local_policy["calibration_type"]
+            bound_policy = cast(Dict[str, Any], assignment["policy"])
+            calibration_type = bound_policy["calibration_type"]
             if calibration_type is not None:
                 root.observer_algorithm = OBSERVER_MAPPING[calibration_type]
-            max_percentile = local_policy["max_percentile"]
+            max_percentile = bound_policy["max_percentile"]
             if max_percentile is not None:
                 root.detail[ppq_common.OBSERVER_PERCENTILE_MANUL_OVERRIDE] = float(max_percentile)
-            range_policy = local_policy["range_policy"]
+            range_policy = bound_policy["range_policy"]
             if range_policy is not None:
                 root.observer_algorithm = CONSTRAINED_OBSERVER
                 root.detail[RANGE_POLICY_DETAIL_KEY] = dict(range_policy["spec"])
@@ -428,7 +428,7 @@ class LocalPolicyRebindPass(QuantizationOptimizationPass):
             root.detail[LOCAL_POLICY_ASSIGNMENT_KEY] = {
                 "policy_name": assignment["policy_name"],
                 "tensor_names": list(assignment["tensor_names"]),
-                "policy": local_policy,
+                "policy": bound_policy,
             }
             entry = {
                 "policy_name": assignment["policy_name"],
@@ -456,15 +456,15 @@ class LocalPolicyRebindPass(QuantizationOptimizationPass):
         _write_manifest(self._manifest_path, manifest)
 
 
-class ConstrainedRangeFinalizePass(QuantizationOptimizationPass):
+class ConstrainedRangeFinalizePass(QuantizationOptimizationPass):  # type: ignore[misc]
     """Restore and verify selected qparams after block-wise finetuning."""
 
     def __init__(self, manifest_path: Optional[str] = None) -> None:
         super().__init__(name="RISCY-SVT Constrained Range Finalize Pass")
         self._manifest_path = manifest_path
 
-    @empty_ppq_cache
-    def optimize(self, graph: BaseGraph, **kwargs) -> None:
+    @empty_ppq_cache  # type: ignore[untyped-decorator]
+    def optimize(self, graph: BaseGraph, **kwargs: Any) -> None:
         _, descriptors = _config_records(graph)
         roots: Dict[int, TensorQuantizationConfig] = {}
         for operation in graph.operations.values():

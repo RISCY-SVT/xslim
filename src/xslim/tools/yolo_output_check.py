@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Sequence, Tuple
 
 import numpy as np
-import onnxruntime as ort
+import onnxruntime as ort  # type: ignore[import-untyped]
 
 from .common import (
     load_preprocess,

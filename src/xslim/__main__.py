@@ -2,20 +2,33 @@
 # Copyright (c) 2023 SpacemiT. All rights reserved.
 import argparse
 import json
+from typing import Optional, Sequence
+
+from xslim.defs import _get_version
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(prog="xslim", formatter_class=argparse.RawTextHelpFormatter)
-    parser.add_argument("-c", "--config", required=False, default=None, help="Path to the Xquant Config.")
-    parser.add_argument("-i", "--input_path", required=False, default=None, help="Path to the Input ONNX Model.")
-    parser.add_argument("-o", "--output_path", required=False, default=None, help="Path to the Output ONNX Model.")
-    parser.add_argument("--fp16", required=False, action="store_true", help="convert onnx model to fp16.")
-    parser.add_argument("--dynq", required=False, action="store_true", help="convert onnx model to dynq.")
-    parser.add_argument("--ignore_op_types", required=False, default="", help="Ignore op types.")
-    parser.add_argument("--ignore_op_names", required=False, default="", help="Ignore op names.")
+    parser = argparse.ArgumentParser(
+        prog="xslim",
+        description="Quantize, convert, or simplify an ONNX model.",
+        epilog=(
+            "examples:\n"
+            "  xslim --config config.json\n"
+            "  xslim -i model.onnx -o model.dynamic.onnx --dynq\n"
+            "  xslim -i model.onnx -o model.fp16.onnx --fp16"
+        ),
+        formatter_class=argparse.RawTextHelpFormatter,
+    )
+    parser.add_argument("--version", action="version", version=f"xslim {_get_version()}")
+    parser.add_argument("-c", "--config", default=None, help="JSON quantization configuration path.")
+    parser.add_argument("-i", "--input_path", default=None, help="Input ONNX model path.")
+    parser.add_argument("-o", "--output_path", default=None, help="Output ONNX model path.")
+    parser.add_argument("--fp16", action="store_true", help="Convert the input model to FP16.")
+    parser.add_argument("--dynq", action="store_true", help="Apply dynamic quantization.")
+    parser.add_argument("--ignore_op_types", default="", help="Comma-separated operator types to exclude.")
+    parser.add_argument("--ignore_op_names", default="", help="Comma-separated operator names to exclude.")
     parser.add_argument(
         "--opset",
-        required=False,
         type=int,
         default=None,
         help="Convert the default ai.onnx opset to the target version.",
@@ -23,7 +36,7 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def main(argv=None) -> int:
+def main(argv: Optional[Sequence[str]] = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
 
@@ -61,7 +74,7 @@ def main(argv=None) -> int:
             args.config = json.load(fp)
         args.config.setdefault("model_parameters", {})["opset"] = args.opset
 
-    from . import quantize_onnx_model
+    from .xslim_pipeline import quantize_onnx_model
 
     quantize_onnx_model(args.config, args.input_path, args.output_path)
     return 0

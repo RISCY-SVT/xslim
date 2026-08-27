@@ -1,6 +1,7 @@
 """End-to-end regression tests for the public quantization pipeline."""
 
 import os
+import re
 import shutil
 import sys
 import tempfile
@@ -130,6 +131,7 @@ class TestQuantizePipeline(unittest.TestCase):
 
     def test_dynamic_quantize_pipeline_supports_external_data_resnet18(self):
         with tempfile.TemporaryDirectory() as tempdir:
+            torch.manual_seed(0)
             source_model_path = self._prepare_model("resnet18", torchvision.models.resnet18(weights=None))
             model_path = os.path.join(tempdir, "resnet18_external.onnx")
             output_path = os.path.join(tempdir, "resnet18_external.dynq.onnx")
@@ -165,15 +167,25 @@ class TestQuantizePipeline(unittest.TestCase):
 
     def test_fp16_pipeline_converts_mobilenet_v2_end_to_end(self):
         with tempfile.TemporaryDirectory() as tempdir:
+            torch.manual_seed(0)
             source_model_path = self._prepare_model("mobilenet_v2", torchvision.models.mobilenet_v2(weights=None))
             model_path = os.path.join(tempdir, "mobilenetv2.onnx")
             output_path = os.path.join(tempdir, "mobilenetv2.fp16.onnx")
 
             shutil.copyfile(source_model_path, model_path)
 
-            fp16_model = xslim.quantize_onnx_model(
-                self._build_config(model_path, precision_level=4), output_path=output_path
+            with warnings.catch_warnings(record=True) as caught:
+                warnings.simplefilter("always")
+                fp16_model = xslim.quantize_onnx_model(
+                    self._build_config(model_path, precision_level=4), output_path=output_path
+                )
+
+            truncation_warning = re.compile(
+                r"^the float32 number [-+0-9.eE]+ will be truncated to [-+0-9.eE]+$"
             )
+            for warning in caught:
+                self.assertIs(warning.category, UserWarning)
+                self.assertRegex(str(warning.message), truncation_warning)
 
             self.assertTrue(os.path.exists(output_path))
             onnx.checker.check_model(fp16_model)

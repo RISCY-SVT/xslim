@@ -3,7 +3,7 @@
 import logging
 import os
 from enum import Enum
-from typing import Optional
+from typing import Any, Iterable, Optional
 
 import onnx
 
@@ -11,11 +11,11 @@ from .logger import (xslim_debug, xslim_error, xslim_info, xslim_trace,
                      xslim_warning)
 
 
-def _get_version():
+def _get_version() -> str:
     # Prefer the version from the local source tree (VERSION_NUMBER) when available.
     try:
         version_file = os.path.join(
-            os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+            os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
             'VERSION_NUMBER'
         )
         with open(version_file, encoding='utf-8') as f:
@@ -96,7 +96,9 @@ OBSERVER_SIGMOID_MAX_VALUE = 10
 MIN_ONNX_OPSET_VERSION = 24
 
 
-def get_default_onnx_opset_version(opset_imports, default_version: int = MIN_ONNX_OPSET_VERSION) -> int:
+def get_default_onnx_opset_version(
+    opset_imports: Iterable[Any], default_version: int = MIN_ONNX_OPSET_VERSION
+) -> int:
     """Return the default ai.onnx opset version from an import list."""
     for opset in opset_imports or []:
         domain = getattr(opset, "domain", None)
