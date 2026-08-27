@@ -1,6 +1,6 @@
 # Constrained signed-INT8 range policies
 
-`2.1.2+riscy.2.dev2` provides an optional local range policy for signed,
+`2.1.2+riscy.2` provides an optional local range policy for signed,
 asymmetric, per-tensor activation Q/DQ domains. The selector is explicit and
 fails closed. No model-specific tensor name is built into XSlim.
 

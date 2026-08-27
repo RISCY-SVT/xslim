@@ -8,7 +8,7 @@
 
 中文 | [English](README.md)
 
-[![版本](https://img.shields.io/badge/版本-2.1.2%2Briscy.1-blue.svg)](https://github.com/RISCY-SVT/xslim/releases)
+[![版本](https://img.shields.io/badge/版本-2.1.2%2Briscy.2-blue.svg)](https://github.com/RISCY-SVT/xslim/releases)
 [![许可证](https://img.shields.io/badge/许可证-Apache%202.0-green.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/python-%3E%3D3.9-blue.svg)](https://www.python.org/)
 
@@ -41,10 +41,10 @@
 ## 安装
 
 RISCY-SVT 非官方版本不发布到 PyPI。请安装
-`v2.1.2-riscy.1` GitHub Release 中附带的 wheel：
+`v2.1.2-riscy.2` GitHub 或 GitLab Release 中附带的 wheel：
 
 ```bash
-python -m pip install ./xslim-2.1.2+riscy.1-py3-none-any.whl
+python -m pip install ./xslim-2.1.2+riscy.2-py3-none-any.whl
 ```
 
 或从源码安装：
@@ -52,7 +52,7 @@ python -m pip install ./xslim-2.1.2+riscy.1-py3-none-any.whl
 ```bash
 git clone https://github.com/RISCY-SVT/xslim.git
 cd xslim
-git switch riscy/k1x-yolo26-hardening-release-001
+git switch riscy/k1x-yolo26
 python -m pip install .
 ```
 
