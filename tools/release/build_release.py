@@ -236,6 +236,24 @@ def assert_archive_safe(path: Path) -> None:
         raise RuntimeError(f"release archive contains forbidden payloads: {sorted(set(rejected))}")
 
 
+def normalize_sdist(path: Path, epoch: int) -> None:
+    with tempfile.TemporaryDirectory(prefix="xslim-sdist-normalize-") as temporary:
+        extraction = Path(temporary) / "content"
+        extraction.mkdir()
+        with tarfile.open(path, "r:gz") as archive:
+            if any(member.issym() or member.islnk() for member in archive.getmembers()):
+                raise RuntimeError("sdist contains a symbolic or hard link")
+            archive.extractall(extraction, filter="data")
+        roots = [item for item in extraction.iterdir() if item.is_dir()]
+        if len(roots) != 1 or any(item.is_file() for item in extraction.iterdir()):
+            raise RuntimeError("sdist does not contain exactly one root directory")
+        root = roots[0]
+        files = [item.relative_to(root) for item in sorted(root.rglob("*")) if item.is_file()]
+        normalized = Path(temporary) / path.name
+        write_tar_gz(normalized, root, files, root.name, epoch)
+        shutil.copyfile(normalized, path)
+
+
 def write_json(path: Path, payload: object) -> None:
     path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
@@ -285,6 +303,8 @@ def build(args: argparse.Namespace) -> None:
             raise RuntimeError(f"unexpected build outputs: {sorted(produced)}")
         for name in sorted(expected):
             shutil.copyfile(build_output / name, output / name)
+            if name.endswith(".tar.gz"):
+                normalize_sdist(output / name, args.source_date_epoch)
             assert_archive_safe(output / name)
 
     source_name = f"xslim-{VERSION}-source.tar.gz"

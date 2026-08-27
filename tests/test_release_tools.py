@@ -55,3 +55,18 @@ def test_source_archive_excludes_dataset_and_model_payloads(tmp_path):
     (tmp_path / "sample.npy").write_bytes(b"dataset")
     (tmp_path / "model.onnx").write_bytes(b"model")
     assert tool.source_files(tmp_path) == [Path("module.py")]
+
+
+def test_sdist_normalization_removes_archive_time_variance(tmp_path):
+    tool = load_tool("build_release.py")
+    source = tmp_path / "source"
+    source.mkdir()
+    (source / "PKG-INFO").write_text("Metadata-Version: 2.4\n", encoding="utf-8")
+    first = tmp_path / "first.tar.gz"
+    second = tmp_path / "second.tar.gz"
+    tool.write_tar_gz(first, source, [Path("PKG-INFO")], "xslim-test", 1_700_000_000)
+    tool.write_tar_gz(second, source, [Path("PKG-INFO")], "xslim-test", 1_800_000_000)
+    assert first.read_bytes() != second.read_bytes()
+    tool.normalize_sdist(first, 1_900_000_000)
+    tool.normalize_sdist(second, 1_900_000_000)
+    assert first.read_bytes() == second.read_bytes()
