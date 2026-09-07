@@ -18,6 +18,7 @@ include THIRD_PARTY_LICENSES.tsv
 include UPSTREAM.md
 include VERSION_NUMBER
 include requirements.txt
+include requirements-certified-python312.txt
 graft doc
 graft docs
 graft samples

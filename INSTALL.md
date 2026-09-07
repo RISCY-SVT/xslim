@@ -1,82 +1,92 @@
 # Install XSlim
 
-XSlim requires Python 3.9 or newer. A dedicated virtual environment prevents
-ONNX, ONNX Runtime, Torch, and NumPy versions from colliding with other tools.
+The local maintenance package is `2.1.2+riscy.2.1`. No maintenance tag or
+remote release exists. Obtain the wheel/sdist and checksums from the local
+operator handoff. The published `v2.1.2-riscy.2` assets remain immutable;
+their original Python 3.9 claim is corrected by this maintenance.
 
-## Install a Release Wheel
+## Certified Environment
+
+The executed reference is **CPython 3.12.3, Ubuntu 24.04, Linux x86_64, CPU**.
+[requirements-certified-python312.txt](requirements-certified-python312.txt)
+pins its complete runtime dependency closure, including NumPy 2.5.2,
+ONNX 1.21.0, ONNX Runtime 1.24.3 and Torch 2.13.0+cpu.
+
+Package metadata permits `>=3.12.3,<3.13`. Only 3.12.3 on the platform above
+has been executed in this maintenance. Later 3.12 patches are not separately
+certified. Python 3.9 is incompatible with required ONNX; Python 3.10/3.11
+cannot install the certified NumPy version. Python 3.13 and later, other
+platforms, and CUDA are outside this bounded certification.
+
+## Install the Local Wheel
+
+Keep the constraints file beside the wheel and use a dedicated environment:
 
 ```bash
-python3 -m venv .venv
+python3.12 -m venv .venv
 . .venv/bin/activate
-python -m pip install --upgrade pip
-python -m pip install ./xslim-2.1.2+riscy.2-py3-none-any.whl
+python -c "import sys; assert sys.version_info[:3] == (3, 12, 3)"
+python -m pip install --constraint requirements-certified-python312.txt --extra-index-url https://download.pytorch.org/whl/cpu ./xslim-2.1.2+riscy.2.1-py3-none-any.whl
 xslim --version
 python -m pip check
 ```
 
-Expected version: `2.1.2+riscy.2`; `pip check` must report no broken
-requirements.
+Expected version: `xslim 2.1.2+riscy.2.1`; `pip check` must report no
+broken requirements. Use the exact CPU wheel source when those Torch versions
+are unavailable from the default index. An offline installation may use a
+verified wheelhouse containing the same pins. Do not silently substitute
+another numeric dependency version.
 
-If a different version appears, run `python -m pip show xslim`, remove that
-package, and reinstall the release wheel by explicit path. This fork is not on
-PyPI.
+If a different XSlim appears, inspect `python -m pip show xslim` and activate
+the intended environment. This downstream fork is not published to PyPI;
+`pip install xslim` is not the installation route.
 
-## Install the Source Distribution
+## Install the Local Source Distribution
+
+In a separate Python 3.12.3 environment:
 
 ```bash
-python3 -m venv .venv-sdist
+python3.12 -m venv .venv-sdist
 . .venv-sdist/bin/activate
-python -m pip install ./xslim-2.1.2+riscy.2.tar.gz
+python -m pip install --constraint requirements-certified-python312.txt --extra-index-url https://download.pytorch.org/whl/cpu ./xslim-2.1.2+riscy.2.1.tar.gz
 xslim --version
+python -m pip check
 ```
 
-## Install from a Verified Source Checkout
+Build tools used for the certified local build are setuptools 83.0.0 and
+wheel 0.46.3. The operator receipt also records the Python, pip and build
+frontend identities.
+
+## Source Checkout and API Smoke
+
+Use the exact maintenance commit from the local commit receipt. A clone of a
+remote still at riscy.2 does not contain these corrections. After checking
+the source commit and archive checksums:
 
 ```bash
-git clone https://github.com/RISCY-SVT/xslim.git
-cd xslim
-git checkout v2.1.2-riscy.2
-python3 -m venv .venv
-. .venv/bin/activate
-python -m pip install .
+python -m pip install --constraint requirements-certified-python312.txt .
+python samples/reconstruction_minimal.py
+python -m xslim --help
 ```
 
-Verify release checksums before installation:
+The synthetic example prints finite loss diagnostics and completes within
+eight iterations. It requires no model or dataset and writes no ONNX artifact.
+The same file is included in the sdist/source archive; it is not a wheel
+console entry point. A wheel installation can execute the file from its
+matching source archive.
 
-```bash
-sha256sum -c SHA256SUMS
-```
+## Verification Scope
 
-The release tag is annotated but is not claimed to be cryptographically signed.
+The maintenance tests use an isolated copy of the accepted dependency
+environment and fresh wheel/sdist installations into separate environments.
+Dependency metadata/resolver rejection checks for unsupported Python versions
+do not count as executions of those interpreters. See the operator
+`python_support_matrix.tsv` for the exact executed and inspected scopes.
 
-## Development Install
+Generic PTQ recipes require separately supplied models and calibration data.
+They were not run as a maintenance campaign and do not reproduce frozen
+B2/C2. Follow [QUICKSTART.md](QUICKSTART.md) and the
+[reproduction distinction](docs/K1X_YOLO26_COOKBOOK.md).
 
-```bash
-python3 -m venv .venv-dev
-. .venv-dev/bin/activate
-python -m pip install -e .
-python -m pytest
-```
-
-For release-quality checks install Ruff, mypy, build, twine,
-check-wheel-contents, and ShellCheck in the development environment. Do not
-install host release tools on a K1X board.
-
-## Platform Notes
-
-- Quantization is an offline host workflow; CPU execution is supported.
-- CUDA calibration is used only when the installed Torch build and hardware
-  expose CUDA.
-- SpaceMIT provider execution requires a separately installed vendor runtime
-  and board validation. It is not bundled with XSlim.
-- Large ONNX models may use external data. Keep model and data files together.
-
-## Common Failures
-
-`ModuleNotFoundError: onnx` means the package dependencies were not installed
-in the active environment. Activate the intended venv and reinstall the wheel.
-
-`pip check` conflicts usually mean XSlim was installed into a shared ML
-environment. Create a fresh venv instead of forcing dependency replacement.
-
-For other failures, see [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md).
+For package conflicts, create a fresh environment with the certified
+constraints. For other failures, see [TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md).

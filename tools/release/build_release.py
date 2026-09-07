@@ -21,8 +21,8 @@ from typing import Iterable, Sequence
 import zipfile
 
 
-VERSION = "2.1.2+riscy.2"
-TAG = "v2.1.2-riscy.2"
+VERSION = "2.1.2+riscy.2.1"
+TAG = "v2.1.2-riscy.2.1"
 UPSTREAM_COMMIT = "9a33f2f770d00fd02ff8bc0f1907135e9bf47f8c"
 UPSTREAM_TREE = "05d2c8425ab8587abf401fa5976a08d008fdd719"
 EXCLUDED_PARTS = {
@@ -53,6 +53,7 @@ ROOT_DOCUMENTS = {
     "THIRD_PARTY_LICENSES.tsv",
     "THIRD_PARTY_NOTICES.md",
     "UPSTREAM.md",
+    "requirements-certified-python312.txt",
 }
 DOC_SUFFIXES = {".json", ".md", ".py", ".sh", ".tsv", ".yaml", ".yml"}
 EXCLUDED_SUFFIXES = {
@@ -302,6 +303,12 @@ def build(args: argparse.Namespace) -> None:
         if produced != expected:
             raise RuntimeError(f"unexpected build outputs: {sorted(produced)}")
         for name in sorted(expected):
+            if args.raw_package_dir is not None:
+                args.raw_package_dir.mkdir(parents=True, exist_ok=True)
+                raw_destination = args.raw_package_dir / name
+                if raw_destination.exists():
+                    raise RuntimeError(f"raw package destination exists: {raw_destination}")
+                shutil.copyfile(build_output / name, raw_destination)
             shutil.copyfile(build_output / name, output / name)
             if name.endswith(".tar.gz"):
                 normalize_sdist(output / name, args.source_date_epoch)
@@ -344,6 +351,8 @@ def build(args: argparse.Namespace) -> None:
         "schema": "xslim-riscy-release-manifest-v1",
         "version": VERSION,
         "tag": TAG,
+        "tag_status": "proposed-not-created",
+        "publication_status": "not-attempted-not-authorized",
         "source_commit": args.source_commit,
         "source_tree": args.source_tree,
         "source_date_epoch": args.source_date_epoch,
@@ -375,6 +384,7 @@ def parser() -> argparse.ArgumentParser:
     result.add_argument("--source-tree", required=True)
     result.add_argument("--source-date-epoch", type=int, required=True)
     result.add_argument("--python", default=sys.executable)
+    result.add_argument("--raw-package-dir", type=Path, help="Preserve native backend bytes before deterministic sdist packaging.")
     return result
 
 

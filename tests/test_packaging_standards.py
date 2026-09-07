@@ -61,7 +61,7 @@ class TestPackagingStandards(unittest.TestCase):
         self.assertEqual(
             project["urls"]["Upstream"], "https://github.com/spacemit-com/xslim"
         )
-        self.assertIn("v2.1.2-riscy.2", project["urls"]["Documentation"])
+        self.assertIn("riscy/k1x-yolo26", project["urls"]["Documentation"])
         self.assertEqual(
             project["scripts"]["xslim-yolo-output-check"],
             "xslim.tools.yolo_output_check:main",
@@ -136,7 +136,7 @@ class TestPackagingStandards(unittest.TestCase):
                 main_module.main(["--version"])
 
         self.assertEqual(exit_context.exception.code, 0)
-        self.assertEqual(stdout.getvalue().strip(), "xslim 2.1.2+riscy.2")
+        self.assertEqual(stdout.getvalue().strip(), "xslim 2.1.2+riscy.2.1")
 
 
 if __name__ == '__main__':

@@ -7,7 +7,7 @@ build-backend = "setuptools.build_meta"
 name = "xslim"
 description = "XSlim is an offline quantization toolkit based on PPQ for ONNX models."
 readme = { file = "README.md", content-type = "text/markdown" }
-requires-python = ">=3.9"
+requires-python = ">=3.12.3,<3.13"
 license = "Apache-2.0"
 license-files = [
     "LICENSE",
@@ -31,9 +31,6 @@ classifiers = [
     "Intended Audience :: Science/Research",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
 ]
@@ -42,7 +39,7 @@ dynamic = ["version", "dependencies"]
 [project.urls]
 Homepage = "https://github.com/RISCY-SVT/xslim"
 Repository = "https://github.com/RISCY-SVT/xslim"
-Documentation = "https://github.com/RISCY-SVT/xslim/tree/v2.1.2-riscy.2/docs"
+Documentation = "https://github.com/RISCY-SVT/xslim/tree/riscy/k1x-yolo26/docs"
 Issues = "https://github.com/RISCY-SVT/xslim/issues"
 Upstream = "https://github.com/spacemit-com/xslim"
 "Release Notes" = "https://github.com/RISCY-SVT/xslim/releases/tag/v2.1.2-riscy.2"
@@ -71,7 +68,7 @@ line-length = 120
 
 [tool.ruff]
 line-length = 120
-target-version = "py39"
+target-version = "py312"
 respect-gitignore = true
 
 [tool.ruff.lint]
