@@ -21,37 +21,101 @@ The public entry points are `ReconstructionConfig`,
 `compute_bias_correction`, and `apply_bias_correction` in
 `xslim.reconstruction`.
 
-## Minimal Pattern
+## Executable Synthetic Example
 
-```python
-from xslim.reconstruction import ReconstructionConfig, reconstruct_block
+This example exercises the public API on six small CPU tensors with a local
+seed and at most eight iterations. It reads no dataset and exports no model.
+Run it from the source checkout or extracted source distribution after
+[installation](../INSTALL.md):
 
-config = ReconstructionConfig(
-    seed=65001,
-    max_iterations=200,
-    validation_interval=10,
-    patience=5,
-)
-
-result = reconstruct_block(
-    block_name="conv-target",
-    fp_weight=fp_weight,
-    scale=weight_scale,
-    zero_point=weight_zero_point,
-    train_inputs=train_inputs,
-    train_teacher_outputs=train_teacher_outputs,
-    validation_inputs=validation_inputs,
-    validation_teacher_outputs=validation_teacher_outputs,
-    student_forward=student_forward,
-    config=config,
-    initial_codes=accepted_int8_codes,
-)
+```bash
+python samples/reconstruction_minimal.py
 ```
 
-Expected result: hardened INT8 codes plus train/validation loss, sample-order
-hash, best iteration, stop reason, and rollback status. The caller must export
-the codes through an existing static weight initializer and revalidate the
-full graph.
+Expected output is a JSON manifest with finite train/validation losses,
+`iterations` (at most eight), `stop_reason`, `rolled_back`, and
+`sample_order_sha256`. A rollback is a valid outcome; this is an API exercise,
+not a detector validation or proof of reconstruction benefit.
+
+<!-- reconstruction-minimal:start -->
+```python
+# Copyright 2026 RISCY-SVT
+"""Synthetic API exercise; no model, dataset, or detector accuracy claim."""
+
+import json
+from typing import Mapping
+
+import numpy as np
+import torch
+
+from xslim.reconstruction import (
+    AdaptiveWeightRounder,
+    ReconstructionConfig,
+    ReconstructionResult,
+    reconstruct_block,
+)
+
+
+def run_example() -> ReconstructionResult:
+    generator = torch.Generator(device="cpu").manual_seed(17)
+    weight = torch.tensor([[0.49, 0.40]], dtype=torch.float32)
+    scale = torch.tensor([1.0], dtype=torch.float32)
+    zero_point = torch.zeros(1, dtype=torch.int8)
+    rounder = AdaptiveWeightRounder(weight, scale, zero_point)
+    train_inputs = [torch.rand((1, 2), generator=generator) for _ in range(4)]
+    validation_inputs = [torch.rand((1, 2), generator=generator) for _ in range(2)]
+
+    def teacher_forward(value: torch.Tensor) -> torch.Tensor:
+        return value @ weight.T
+
+    def student_forward(
+        value: torch.Tensor,
+        weights: Mapping[str, torch.Tensor],
+        activation_drop_probability: float,
+        generator: torch.Generator,
+    ) -> torch.Tensor:
+        assert activation_drop_probability == 0.0
+        return value @ weights["weight"].T
+
+    result = reconstruct_block(
+        {"weight": rounder},
+        train_inputs,
+        validation_inputs,
+        teacher_forward,
+        student_forward,
+        block_name="synthetic-linear",
+        config=ReconstructionConfig(
+            seed=17, max_iterations=8, validation_interval=2, patience=2,
+        ),
+    )
+    codes = result.hardened_weights["weight"]
+    assert codes.shape == (1, 2) and codes.dtype == np.int8
+    output = validation_inputs[0] @ (torch.from_numpy(codes).float() * scale[:, None]).T
+    assert output.shape == (1, 1) and output.dtype == torch.float32
+    assert torch.isfinite(output).all()
+    assert np.isfinite(result.final_validation_loss)
+    assert 1 <= result.iterations <= 8
+    return result
+
+
+if __name__ == "__main__":
+    print(json.dumps(run_example().manifest(), sort_keys=True))
+```
+<!-- reconstruction-minimal:end -->
+
+The code above is checked byte-for-byte against
+[samples/reconstruction_minimal.py](../samples/reconstruction_minimal.py) and
+executed by its regression test. The returned `hardened_weights` contains
+INT8 arrays; `manifest()` contains diagnostics, not those arrays.
+`teacher_forward(input)` returns the reference tensor.
+`student_forward(input, weights, activation_drop_probability, generator)`
+uses the supplied dequantized weights. The callbacks represent the target
+operation only.
+
+For a separately authorized export, the caller must preserve the existing
+static initializer topology and validate the complete graph. The immutable
+riscy.2 guide had an invalid call signature; see the
+[current erratum](MAINTENANCE_ERRATA.md).
 
 If validation does not improve, the engine restores the accepted initial codes.
 Do not replace rollback with the nearest re-quantized FP32 weight.
