@@ -1,5 +1,15 @@
 # Changelog
 
+## 2.1.2+riscy.2.1 - Local Maintenance, Not Published
+
+- Correct the reconstruction example and execute its shared synthetic source.
+- Limit Python metadata to >=3.12.3,<3.13; certify CPython 3.12.3 Linux x86_64
+  with the preserved complete numeric dependency closure.
+- Distinguish syntax, API binding and execution in documentation audits.
+- Clarify generic recipes, historical Stage64 and frozen B2/C2 reproduction.
+- Preserve all runtime Python modules, riscy.2 release objects, frozen models,
+  accepted scientific evidence and the existing C2 TIER-1 waiver.
+
 ## 2.1.2+riscy.2 - 2026-08-27
 
 - Added deterministic constrained asymmetric INT8 range policies with strict

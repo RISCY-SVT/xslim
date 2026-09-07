@@ -1,5 +1,10 @@
 # Limitations
 
+Current maintenance is local-only and certifies CPython 3.12.3 on Linux
+x86_64 with the accepted dependency lock. See [INSTALL.md](../INSTALL.md)
+and [the documentation erratum](MAINTENANCE_ERRATA.md). No new model-generation
+or board campaign was run for these documentation/metadata corrections.
+
 ## Product and Runtime Claims
 
 XSlim is an offline model transformation tool. It does not prove target

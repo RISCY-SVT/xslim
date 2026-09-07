@@ -1,9 +1,9 @@
 <!-- Modified by RISCY-SVT in 2026 to document the unofficial downstream release. -->
-> **Unofficial RISCY-SVT release.** This fork is based on XSlim 2.1.2 source
+> **Unofficial RISCY-SVT downstream.** This fork is based on XSlim 2.1.2 source
 > commit `9a33f2f770d00fd02ff8bc0f1907135e9bf47f8c`. It is not endorsed by
 > SpacemiT and is not published to PyPI. See [UPSTREAM.md](UPSTREAM.md).
 
-# XSlim 2.1.2+riscy.2
+# XSlim 2.1.2+riscy.2.1 (Local Maintenance)
 
 [English](README.md) | [Русский](docs/ru/README.md) | [中文](README_zh.md)
 
@@ -14,19 +14,22 @@ for the K1X SpaceMIT signed-S8 split-model contract.
 
 ## Install
 
-Download the wheel from the `v2.1.2-riscy.2` GitHub or GitLab release, then:
+Use the locally built maintenance wheel and certified dependency constraints.
+The executed environment is CPython 3.12.3 on Ubuntu 24.04 Linux x86_64 (CPU).
+This maintenance is not pushed, tagged or released; published riscy.2 remains
+the frozen model-generation reference. See [INSTALL.md](INSTALL.md).
 
 ```bash
-python3 -m venv .venv
+python3.12 -m venv .venv
 . .venv/bin/activate
-python -m pip install ./xslim-2.1.2+riscy.2-py3-none-any.whl
+python -m pip install --constraint requirements-certified-python312.txt --extra-index-url https://download.pytorch.org/whl/cpu ./xslim-2.1.2+riscy.2.1-py3-none-any.whl
 xslim --version
 ```
 
 Expected output:
 
 ```text
-xslim 2.1.2+riscy.2
+xslim 2.1.2+riscy.2.1
 ```
 
 The package is intentionally absent from PyPI. If `pip install xslim` returns
@@ -45,6 +48,10 @@ python -m build
 
 Prepare a floating-point ONNX model, a text file with one calibration image per
 line, and `config.json`:
+
+This is a generic recipe, not frozen B2/C2 reproduction. Model generation was
+not executed in this documentation maintenance. For a runnable dataset-free
+API exercise, use [the reconstruction example](docs/RECONSTRUCTION_GUIDE.md).
 
 ```json
 {
@@ -143,6 +150,7 @@ See [RECONSTRUCTION_GUIDE.md](docs/RECONSTRUCTION_GUIDE.md).
 
 ## Documentation
 
+- [Current maintenance errata and verification limits](docs/MAINTENANCE_ERRATA.md)
 - [Installation](INSTALL.md)
 - [Quick start](QUICKSTART.md)
 - [User guide](docs/USER_GUIDE.md)
@@ -157,10 +165,15 @@ See [RECONSTRUCTION_GUIDE.md](docs/RECONSTRUCTION_GUIDE.md).
 
 ## Release Boundaries
 
-The release includes source, documentation, wheel, sdist, SPDX SBOM, manifest,
+The immutable riscy.2 release includes source, documentation, wheel, sdist, SPDX SBOM, manifest,
 and checksums. It includes no model, weight, prediction, dataset, SpaceMIT
 runtime, or vendor binary. Models produced with XSlim require independent
 accuracy, placement, performance, and stability validation.
+
+B2 remains the universal vendor control and rollback. C2 remains the exact
+frozen higher-AP profile under the existing TIER-1 waiver; its historical
+universal recall gate remains FAIL. A C2-specific score threshold must be
+selected before application-default use. Maintenance does not enact a default.
 
 ## License and Support
 

@@ -1,5 +1,13 @@
 # Troubleshooting
 
+## Python Support and the Old Reconstruction Example
+
+Use CPython 3.12.3 and the certified dependency constraints in
+[INSTALL.md](../INSTALL.md). Python 3.9 conflicts with ONNX 1.21.x;
+Python 3.10/3.11 cannot use the accepted NumPy 2.5.2 pin.
+An unexpected `fp_weight` keyword comes from the invalid riscy.2 example.
+Use the [current executable example](RECONSTRUCTION_GUIDE.md).
+
 ## XSlim Cannot Find the Model or Calibration List
 
 Run the command from the directory assumed by the JSON file, or use absolute

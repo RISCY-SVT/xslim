@@ -2,6 +2,11 @@
 
 ## Identity
 
+Current source/package: local `2.1.2+riscy.2.1` maintenance descendant.
+No new remote push, tag or release is authorized or claimed. Use its local
+source commit receipt and [certified installation](../INSTALL.md).
+The table and release commands below describe the immutable published riscy.2.
+
 | Field | Value |
 |---|---|
 | Package | `xslim` |
@@ -56,6 +61,9 @@ See [UPSTREAM.md](../UPSTREAM.md) for the selected upstream base and
 closure did not merge semantic changes from upstream branches.
 
 ## Verification
+
+Historical published-release verification follows. For corrected local
+maintenance artifacts, use [INSTALL.md](../INSTALL.md), not this old filename.
 
 ```bash
 sha256sum -c SHA256SUMS

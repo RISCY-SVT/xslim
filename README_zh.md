@@ -8,9 +8,9 @@
 
 中文 | [English](README.md)
 
-[![版本](https://img.shields.io/badge/版本-2.1.2%2Briscy.2-blue.svg)](https://github.com/RISCY-SVT/xslim/releases)
+[![版本](https://img.shields.io/badge/版本-2.1.2%2Briscy.2.1_local-blue.svg)](docs/MAINTENANCE_ERRATA.md)
 [![许可证](https://img.shields.io/badge/许可证-Apache%202.0-green.svg)](LICENSE)
-[![Python](https://img.shields.io/badge/python-%3E%3D3.9-blue.svg)](https://www.python.org/)
+[![Python](https://img.shields.io/badge/python-3.12.3_certified-blue.svg)](INSTALL.md)
 
 **XSlim** 是 [SpacemiT](https://www.spacemit.com) 推出的离线（Post-Training）量化工具，集成了已经调整好的适配芯片的量化策略，使用 JSON 配置文件调用统一接口实现 ONNX 模型量化。
 
@@ -40,14 +40,19 @@
 
 ## 安装
 
-RISCY-SVT 非官方版本不发布到 PyPI。请安装
-`v2.1.2-riscy.2` GitHub 或 GitLab Release 中附带的 wheel：
+当前 `2.1.2+riscy.2.1` 是本地维护版本，尚未推送或发布，也没有新标签。
+已验证环境为 CPython 3.12.3、Ubuntu 24.04、Linux x86_64、CPU。
+元数据范围是 >=3.12.3,<3.13；其他版本未单独验证。
+使用本地交接包中的 wheel 和固定依赖，参见 [INSTALL.md](INSTALL.md)。
+原 `v2.1.2-riscy.2` 发布和 B2/C2 模型保持不变。
 
 ```bash
-python -m pip install ./xslim-2.1.2+riscy.2-py3-none-any.whl
+python -m pip install --constraint requirements-certified-python312.txt --extra-index-url https://download.pytorch.org/whl/cpu ./xslim-2.1.2+riscy.2.1-py3-none-any.whl
 ```
 
 或从源码安装：
+
+下面的远程仓库仍可能指向 riscy.2；维护修正以本地交接清单中的提交为准。
 
 ```bash
 git clone https://github.com/RISCY-SVT/xslim.git
@@ -70,6 +75,10 @@ python -m build
 ```
 
 ## 快速开始
+
+以下是通用 PTQ 示例，不是 B2/C2 的精确复现，也未在本次维护中执行。
+可直接执行的小型合成示例见 [RECONSTRUCTION_GUIDE.md](docs/RECONSTRUCTION_GUIDE.md)。
+精确复现所需清单和 C2 阈值要求见 [K1X cookbook](docs/K1X_YOLO26_COOKBOOK.md)。
 
 ### Python API
 

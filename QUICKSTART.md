@@ -2,6 +2,11 @@
 
 This example quantizes a floating-point image model to static INT8 Q/DQ.
 
+Install the certified Python 3.12.3 environment using [INSTALL.md](INSTALL.md).
+This is a generic recipe with user-supplied inputs, not an executed maintenance
+workflow or frozen B2/C2 reproduction. The dataset-free executable check is
+[the synthetic reconstruction example](docs/RECONSTRUCTION_GUIDE.md).
+
 ## 1. Prepare Inputs
 
 ```text

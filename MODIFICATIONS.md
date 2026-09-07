@@ -4,6 +4,16 @@ This file records changes relative to upstream commit
 `9a33f2f770d00fd02ff8bc0f1907135e9bf47f8c`. New files are RISCY-SVT fork
 additions; no ownership claim is made over upstream work.
 
+## Local 2.1.2+riscy.2.1 Maintenance
+
+MAINT-001 corrects the reconstruction documentation with a shared executable
+synthetic sample, constrains Python metadata to >=3.12.3,<3.13, preserves the
+accepted dependency pins, and separates documentation syntax/API/execution
+evidence. Runtime Python modules are byte-identical to riscy.2.
+The version is local-only; no maintenance tag, push or release is authorized.
+Both published riscy tags/assets and all frozen model results remain unchanged.
+The tables below retain the earlier upstream-to-riscy.2 provenance.
+
 ## Modified upstream files
 
 | File | Purpose |
@@ -61,4 +71,5 @@ Its `+riscy.2` suffix is the prominent modification identification.
 - No YoloDecode matcher change was selected for this release.
 - The tagged release source contains no Stage evidence or raw lab artifacts.
 - The published `v2.1.2-riscy.1` tag and package remain unchanged. This source
-  prepares the separate `v2.1.2-riscy.2` downstream release.
+  prepared the separate immutable `v2.1.2-riscy.2` downstream release;
+  current local maintenance is recorded above.

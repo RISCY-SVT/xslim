@@ -1,4 +1,16 @@
-# XSlim 2.1.2+riscy.2
+# XSlim Release Notes
+
+## 2.1.2+riscy.2.1: Local Maintenance, Not Published
+
+D1 corrects and executes the reconstruction example. D2 narrows metadata to
+Python >=3.12.3,<3.13 and preserves the certified numeric dependency closure.
+D3 separates documentation parsing, API binding and execution and explains
+generic versus exact frozen B2/C2 reproduction. See
+[the current erratum](docs/MAINTENANCE_ERRATA.md).
+No runtime Python module, model, qparam or scientific result changes. No new
+tag or release was created. The following riscy.2 record remains historical.
+
+## XSlim 2.1.2+riscy.2 (Published)
 
 Unofficial RISCY-SVT downstream release for reproducible ONNX PTQ and K1X
 SpaceMIT signed-S8 Q/DQ validation. It is not endorsed by SpacemiT and is not

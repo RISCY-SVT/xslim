@@ -70,3 +70,22 @@ def test_sdist_normalization_removes_archive_time_variance(tmp_path):
     tool.normalize_sdist(first, 1_900_000_000)
     tool.normalize_sdist(second, 1_900_000_000)
     assert first.read_bytes() == second.read_bytes()
+
+
+def test_syntax_pass_does_not_claim_api_binding_or_execution():
+    tool = load_tool("check_docs.py")
+    status, detail = tool.check_snippet("python", "missing_api(unknown_argument=True)\n", True)
+    assert status == "pass"
+    evidence = tool.snippet_evidence("python", status, detail)
+    assert evidence["compiled"] == "pass"
+    assert evidence["api_bound"] == "not-run"
+    assert evidence["executed_synthetic"] == "not-run"
+    assert evidence["executed_e2e"] == "not-run"
+
+
+def test_documentation_fragment_is_explicit():
+    tool = load_tool("check_docs.py")
+    status, detail = tool.check_snippet("text", "expected output\n", True)
+    evidence = tool.snippet_evidence("text", status, detail)
+    assert evidence["documentation_fragment"] == "yes"
+    assert evidence["parsed"] == "not-run"

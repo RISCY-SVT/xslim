@@ -5,6 +5,15 @@
 Проверенный маршрут использует квантованную split-модель с шестью выходами и
 отдельный точный float tail. Модели, датасеты и vendor runtime в релиз не входят.
 
+Установка: CPython 3.12.3 по [INSTALL.md](../../INSTALL.md).
+`config_stage64_repro.json` является историческим рецептом Stage64 с
+placeholders, а не воспроизводителем B2/C2. Для точного воспроизведения нужны
+исходная FP32-модель, принятые wheel/dependency lock, C50 и его порядок,
+seed 65001, preprocessing/split adapters, effective config, T6 qparam manifest
+C2, точный tail и evaluator/data manifests. Полный перечень и границы проверки
+приведены в [английском cookbook](../K1X_YOLO26_COOKBOOK.md).
+В maintenance генерация моделей не выполнялась.
+
 ## Контракт
 
 ```text
@@ -59,6 +68,11 @@ AP/AR по размерам и классам, prediction count, failures и unc
 
 Порог score выбирается отдельно по TP/FP/FN и стоимости ошибок приложения.
 Более высокий mAP не гарантирует более высокий recall при конкретном пороге.
+
+B2 остаётся универсальным контролем/откатом. C2 одобрен прежним TIER-1 waiver
+как отдельный frozen higher-AP профиль; универсальный FAIL не изменён.
+При score=0.25, IoU=0.50, maxDets=100 у C2 меньше FP и больше FN.
+Нужен отдельный threshold C2 перед любым default приложения.
 
 ## Direct E2E
 

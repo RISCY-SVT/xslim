@@ -1,5 +1,14 @@
 # Устранение проблем
 
+## Python и старый пример reconstruction
+
+Для maintenance используйте CPython 3.12.3 и зависимости из
+[INSTALL.md](../../INSTALL.md). Python 3.9 не поддерживается принятым ONNX,
+а 3.10/3.11 не поддерживают принятый NumPy. Ошибка unexpected keyword argument
+`fp_weight` означает, что используется неверный пример riscy.2; корректный
+исполняемый код находится в [руководстве](../RECONSTRUCTION_GUIDE.md).
+Синтаксический pass не доказывает выполнение: см. [erratum](../MAINTENANCE_ERRATA.md).
+
 ## Не найдена модель или calibration list
 
 Проверьте рабочую директорию и читаемость файлов:

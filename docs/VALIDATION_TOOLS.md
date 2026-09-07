@@ -2,6 +2,21 @@
 
 The downstream CLIs are opt-in validators. They do not alter a model.
 
+## Documentation Checks
+
+`tools/release/check_docs.py` gives each fenced block a content-bound ID and
+separates parsed, compiled, API-bound, executed-synthetic and executed-e2e
+states. A syntax pass does not prove an executable workflow. External links
+are marked unchecked; internal file targets are checked locally.
+
+```bash
+python tools/release/check_docs.py --root . --output docs-check.json --execute-synthetic
+```
+
+Only the verbatim reconstruction example is executed by this opt-in command.
+Generic PTQ, board, and dataset-dependent recipes keep explicit not-run
+reasons. The [erratum](MAINTENANCE_ERRATA.md) explains the earlier counts.
+
 ## Detector Output Check
 
 ```bash

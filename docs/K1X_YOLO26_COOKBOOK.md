@@ -3,6 +3,27 @@
 This cookbook describes the validated graph contract without bundling a model,
 dataset, runtime, or private path.
 
+Install the certified Python 3.12.3 environment from [INSTALL.md](../INSTALL.md).
+The steps below are a generic graph-contract recipe. They were not executed
+as a PTQ campaign in this maintenance.
+
+## Generic Recipe, Stage64 and Frozen B2/C2
+
+`config_stage64_repro.json` is a sanitized historical Stage64 recipe.
+`config_accuracy_starting_point.json` is an unvalidated starting proposal.
+Neither is an exact B2/C2 reproducer. This distinction also applies to the
+generic JSON in the quick start.
+
+Exact historical reproduction requires the accepted FP32 source hash,
+original generating source/wheel and full dependency lock, C50 membership
+and ordering, seed 65001, exact preprocessing adapter, B2 effective config,
+postprocessing/split adapter, six source/output identities, common-tail hash,
+and evaluator/annotation/image manifests. C2 additionally requires its frozen
+T6 confidence qparam selection manifest and DEV-001B generation adapter.
+These project artifacts are not bundled here. Bind them through the Banana
+DEV-001A/B/C and Stage65E evidence manifests before asserting reproduction.
+The local maintenance package is not a newly certified generator of B2/C2.
+
 ## 1. Freeze Input and Output Identity
 
 Record:
@@ -100,6 +121,12 @@ uncertainty. Selection and full-val surfaces must remain distinct.
 Build TP/FP/FN tables over deployment-relevant score and IoU thresholds. A
 higher-AP model can still trade recall for fewer false positives. Record a
 model-specific threshold and rollback profile before application use.
+
+B2 remains universal control/rollback. The existing C2 TIER-1 waiver approves
+only a separate frozen higher-AP application/research profile. Its historical
+universal gate remains FAIL. At score 0.25, IoU 0.50, maxDets 100, C2 has fewer
+FP and more FN than B2; choose a C2-specific threshold before any application
+default. This guide does not grant a new waiver or promote a runtime.
 
 ## Direct-E2E Limitation
 
