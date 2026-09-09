@@ -1,6 +1,10 @@
 # XSlim Release Notes
 
-## 2.1.2+riscy.2.1: Local Maintenance, Not Published
+## 2.1.2+riscy.2.1: Maintenance Source, No Binary Release
+
+Source-branch publication has separate MAINT-001-PUB authorization. Original
+local candidate manifests remain unchanged; this is not a binary release.
+See [publication status](docs/SOURCE_PUBLICATION_STATUS.md).
 
 D1 corrects and executes the reconstruction example. D2 narrows metadata to
 Python >=3.12.3,<3.13 and preserves the certified numeric dependency closure.

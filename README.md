@@ -3,7 +3,7 @@
 > commit `9a33f2f770d00fd02ff8bc0f1907135e9bf47f8c`. It is not endorsed by
 > SpacemiT and is not published to PyPI. See [UPSTREAM.md](UPSTREAM.md).
 
-# XSlim 2.1.2+riscy.2.1 (Local Maintenance)
+# XSlim 2.1.2+riscy.2.1 (Maintenance Source)
 
 [English](README.md) | [Русский](docs/ru/README.md) | [中文](README_zh.md)
 
@@ -14,10 +14,12 @@ for the K1X SpaceMIT signed-S8 split-model contract.
 
 ## Install
 
-Use the locally built maintenance wheel and certified dependency constraints.
+Use the [pinned source installation](INSTALL.md#source-checkout-and-api-smoke)
+or a locally supplied maintenance wheel with certified dependency constraints.
 The executed environment is CPython 3.12.3 on Ubuntu 24.04 Linux x86_64 (CPU).
-This maintenance is not pushed, tagged or released; published riscy.2 remains
-the frozen model-generation reference. See [INSTALL.md](INSTALL.md).
+Source-branch publication is separate from binary release: no maintenance tag,
+release assets or PyPI package exist. Published riscy.2 remains the frozen
+model-generation reference. See [publication status](docs/SOURCE_PUBLICATION_STATUS.md).
 
 ```bash
 python3.12 -m venv .venv
@@ -34,7 +36,7 @@ xslim 2.1.2+riscy.2.1
 
 The package is intentionally absent from PyPI. If `pip install xslim` returns
 another build, uninstall it and install the downloaded downstream wheel by
-path. Full installation options are in [INSTALL.md](INSTALL.md).
+path, or use the pinned source route. Full installation options are in [INSTALL.md](INSTALL.md).
 
 For a checked-out source tree:
 

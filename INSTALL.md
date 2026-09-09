@@ -1,7 +1,8 @@
 # Install XSlim
 
-The local maintenance package is `2.1.2+riscy.2.1`. No maintenance tag or
-remote release exists. Obtain the wheel/sdist and checksums from the local
+The maintenance source version is `2.1.2+riscy.2.1`. No maintenance tag or
+binary release exists. Source access is documented below. Obtain any candidate
+wheel/sdist and checksums only from the local
 operator handoff. The published `v2.1.2-riscy.2` assets remain immutable;
 their original Python 3.9 claim is corrected by this maintenance.
 
@@ -59,15 +60,28 @@ frontend identities.
 
 ## Source Checkout and API Smoke
 
-Use the exact maintenance commit from the local commit receipt. A clone of a
-remote still at riscy.2 does not contain these corrections. After checking
-the source commit and archive checksums:
+The tested maintenance source and original candidate builds are bound to
+`f5007ceb086d91cc06da0b19bfbc2ce90908fdd5`, tree
+`9903811c33f447974a2d31ce1a16dbbdfc130353`. Later publication-status documentation
+does not change that build identity. Use the exact source commit after its
+branch-publication readback; no maintenance tag is required:
 
 ```bash
-python -m pip install --constraint requirements-certified-python312.txt .
+git clone --single-branch --branch riscy/k1x-yolo26 https://github.com/RISCY-SVT/xslim.git xslim
+cd xslim
+git checkout --detach f5007ceb086d91cc06da0b19bfbc2ce90908fdd5
+python3.12 -m venv .venv
+. .venv/bin/activate
+python -c "import sys; assert sys.version_info[:3] == (3, 12, 3)"
+python -m pip install --constraint requirements-certified-python312.txt --extra-index-url https://download.pytorch.org/whl/cpu .
 python samples/reconstruction_minimal.py
 python -m xslim --help
+python -m pip check
 ```
+
+The established GitLab mirror is `git@gitlab.itglobal.com:riscy/sw/xslim.git`.
+Use the same commit on either remote. See [source-publication status](docs/SOURCE_PUBLICATION_STATUS.md)
+for the distinction between tested source, later docs-only HEAD and local assets.
 
 The synthetic example prints finite loss diagnostics and completes within
 eight iterations. It requires no model or dataset and writes no ONNX artifact.

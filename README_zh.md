@@ -40,7 +40,7 @@
 
 ## 安装
 
-当前 `2.1.2+riscy.2.1` 是本地维护版本，尚未推送或发布，也没有新标签。
+当前 `2.1.2+riscy.2.1` 是维护源代码版本。源代码分支发布与二进制发布分开；没有新的维护标签或二进制发布。
 已验证环境为 CPython 3.12.3、Ubuntu 24.04、Linux x86_64、CPU。
 元数据范围是 >=3.12.3,<3.13；其他版本未单独验证。
 使用本地交接包中的 wheel 和固定依赖，参见 [INSTALL.md](INSTALL.md)。
@@ -52,7 +52,7 @@ python -m pip install --constraint requirements-certified-python312.txt --extra-
 
 或从源码安装：
 
-下面的远程仓库仍可能指向 riscy.2；维护修正以本地交接清单中的提交为准。
+维护修正的测试提交为 `f5007ceb086d91cc06da0b19bfbc2ce90908fdd5`；精确安装步骤和源代码发布状态见 [INSTALL.md](INSTALL.md#source-checkout-and-api-smoke)。
 
 ```bash
 git clone https://github.com/RISCY-SVT/xslim.git

@@ -2,9 +2,11 @@
 
 ## Identity
 
-Current source/package: local `2.1.2+riscy.2.1` maintenance descendant.
-No new remote push, tag or release is authorized or claimed. Use its local
-source commit receipt and [certified installation](../INSTALL.md).
+Current source: `2.1.2+riscy.2.1` maintenance descendant. Existing-branch source
+publication is authorized separately from its locally built candidate assets.
+No maintenance tag, binary release or asset upload is authorized or claimed.
+Use [source-publication status](SOURCE_PUBLICATION_STATUS.md) and
+[certified installation](../INSTALL.md).
 The table and release commands below describe the immutable published riscy.2.
 
 | Field | Value |

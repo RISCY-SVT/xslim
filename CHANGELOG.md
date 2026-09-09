@@ -1,6 +1,10 @@
 # Changelog
 
-## 2.1.2+riscy.2.1 - Local Maintenance, Not Published
+## 2.1.2+riscy.2.1 - Maintenance Source, No Binary Release
+
+MAINT-001-PUB adds source-access/publication documentation only. The tested
+source and local candidate builds remain bound to `f5007ceb086d91cc06da0b19bfbc2ce90908fdd5`.
+See [publication status](docs/SOURCE_PUBLICATION_STATUS.md).
 
 - Correct the reconstruction example and execute its shared synthetic source.
 - Limit Python metadata to >=3.12.3,<3.13; certify CPython 3.12.3 Linux x86_64
